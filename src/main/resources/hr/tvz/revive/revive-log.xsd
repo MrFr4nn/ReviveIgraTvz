@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="dnevnikIgre">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="potez" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:attribute name="runda" type="xs:positiveInteger" use="required"/>
+                        <xs:attribute name="igrac" type="xs:string" use="required"/>
+                        <xs:attribute name="karta" type="xs:string" use="required"/>
+                        <xs:attribute name="radnik" type="tipRadnikaEnum" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="tipRadnikaEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="EXPLORER"/>
+            <xs:enumeration value="BUILDER"/>
+            <xs:enumeration value="SCHOLAR"/>
+            <xs:enumeration value="SCIENTIST"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
