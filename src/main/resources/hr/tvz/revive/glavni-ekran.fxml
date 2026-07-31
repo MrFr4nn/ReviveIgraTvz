@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="hr.tvz.revive.kontroler.GlavniKontroler"
+            prefHeight="700.0" prefWidth="1000.0">
+
+    <top>
+        <VBox spacing="5" alignment="CENTER">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label fx:id="labelaNaslov" text="Revive - Obnova Civilizacije" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label fx:id="labelaTrenutniIgrac" text="Na potezu: -"/>
+            <Label fx:id="labelaRunda" text="Runda: 1 / 5"/>
+        </VBox>
+    </top>
+
+    <left>
+        <VBox spacing="10" prefWidth="250">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Ruka karata:" style="-fx-font-weight: bold;"/>
+            <ListView fx:id="listaRukaKarata" prefHeight="200"/>
+
+            <Label text="Odaberi radnika:" style="-fx-font-weight: bold;"/>
+            <HBox spacing="5">
+                <Button fx:id="gumbExplorer" text="Explorer" onAction="#odaberiExplorer"/>
+                <Button fx:id="gumbBuilder" text="Builder" onAction="#odaberiBuilder"/>
+            </HBox>
+            <HBox spacing="5">
+                <Button fx:id="gumbScholar" text="Scholar" onAction="#odaberiScholar"/>
+                <Button fx:id="gumbScientist" text="Scientist" onAction="#odaberiScientist"/>
+            </HBox>
+
+            <Button fx:id="gumbOdigrajPotez" text="Odigraj potez" onAction="#odigrajPotez" prefWidth="200"/>
+            <Button fx:id="gumbZavrsiPotez" text="Zavrsi potez" onAction="#zavrsiPotez" prefWidth="200"/>
+
+            <Label fx:id="labelaPorukaPoteza" text="" wrapText="true"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Permafrost ploca:" style="-fx-font-weight: bold;"/>
+            <GridPane fx:id="mrezaPermafrosta" hgap="5" vgap="5" alignment="CENTER"/>
+        </VBox>
+    </center>
+
+    <right>
+        <VBox spacing="10" prefWidth="220">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Stanje igraca:" style="-fx-font-weight: bold;"/>
+            <Label fx:id="labelaResursiIgrac1" text="Igrac 1: -"/>
+            <Label fx:id="labelaResursiIgrac2" text="Igrac 2: -"/>
+
+            <Button fx:id="gumbSpremiIgru" text="Spremi igru" onAction="#spremiIgru" prefWidth="180"/>
+            <Button fx:id="gumbUcitajIgru" text="Ucitaj igru" onAction="#ucitajIgru" prefWidth="180"/>
+            <Button fx:id="gumbPrikaziKatalog" text="Katalog radnika" onAction="#prikaziKatalogRadnika" prefWidth="180"/>
+            <Button fx:id="gumbPrikaziReplay" text="Prikazi replay" onAction="#prikaziReplay" prefWidth="180"/>
+        </VBox>
+    </right>
+
+    <bottom>
+        <Label fx:id="labelaKrajIgre" text="" style="-fx-font-size: 16px; -fx-font-weight: bold;">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+        </Label>
+    </bottom>
+
+</BorderPane>
