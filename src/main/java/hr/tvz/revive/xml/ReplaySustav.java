@@ -3,7 +3,6 @@ package hr.tvz.revive.xml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,12 +14,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.xml.sax.SAXException;
 
-/**
- * Ucitava XML dnevnik igre pomocu DOM parsera i rekonstruira
- * tok igre rundu-po-rundu (replay). Za razliku od SAX-a, DOM
- * ucitava cijeli dokument u memoriju kao stablo, sto omogucuje
- * grupiranje poteza po rundama.
- */
 public class ReplaySustav {
 
     public Map<Integer, List<PodatakOPotezu>> ucitajIGrupirajPoRundama(String putanjaDatoteke) {
@@ -69,5 +62,16 @@ public class ReplaySustav {
         }
 
         return tekstReplaya.toString();
+    }
+
+    public List<PodatakOPotezu> ucitajSvePotezeRedom(String putanjaDatoteke) {
+        List<PodatakOPotezu> svilPotezi = new ArrayList<>();
+        Map<Integer, List<PodatakOPotezu>> potPoRundama = ucitajIGrupirajPoRundama(putanjaDatoteke);
+
+        for (List<PodatakOPotezu> potezijedneRunde : potPoRundama.values()) {
+            svilPotezi.addAll(potezijedneRunde);
+        }
+
+        return svilPotezi;
     }
 }

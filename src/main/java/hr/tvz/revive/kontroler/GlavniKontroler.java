@@ -1,13 +1,10 @@
 package hr.tvz.revive.kontroler;
 
-import hr.tvz.revive.animacija.AnimacijaTopljenja;
 import hr.tvz.revive.async.AsinkroniZadaci;
-import hr.tvz.revive.engine.Bodovanje;
 import hr.tvz.revive.engine.ReviveEngine;
 import hr.tvz.revive.engine.RezultatPoteza;
 import hr.tvz.revive.model.Igrac;
 import hr.tvz.revive.model.Karta;
-import hr.tvz.revive.model.PoljePermafrosta;
 import hr.tvz.revive.model.TipRadnika;
 import hr.tvz.revive.xml.ZapisPoteza;
 import javafx.application.Platform;
@@ -36,6 +33,12 @@ public class GlavniKontroler {
     private Label labelaResursiIgrac2;
 
     @FXML
+    private Label labelaStatusRadnika;
+
+    @FXML
+    private Label labelaOdabranaAkcija;
+
+    @FXML
     private Label labelaKrajIgre;
 
     @FXML
@@ -48,7 +51,6 @@ public class GlavniKontroler {
     private ZapisPoteza zapisPoteza;
     private AzuriranjeSucelja azuriranjeSucelja;
     private PomocneAkcijeKontrolera pomocneAkcijeKontrolera;
-    private TipRadnika odabraniTipRadnika;
     private Rectangle[][] pravokutniciPermafrosta;
 
     @FXML
@@ -57,74 +59,72 @@ public class GlavniKontroler {
         zapisPoteza = new ZapisPoteza();
         azuriranjeSucelja = new AzuriranjeSucelja();
         pomocneAkcijeKontrolera = new PomocneAkcijeKontrolera();
-        odabraniTipRadnika = null;
-
         reviveEngine.pokreniNovuIgru("Igrac 1", "Igrac 2");
         zapisPoteza.zapocniZapis();
 
         pravokutniciPermafrosta = azuriranjeSucelja.izgradiPermafrostMrezu(mrezaPermafrosta);
+        azuriranjeSucelja.postaviKlikoveNaPolja(pravokutniciPermafrosta, this::odigrajPotezNaPolju);
+        listaRukaKarata.getSelectionModel().selectedIndexProperty().addListener((obs, staro, novo) -> prikaziOdabranuAkciju());
         azurirajSucelje();
     }
 
-    @FXML
-    private void odaberiExplorer() {
-        postaviOdabraniTipRadnika(TipRadnika.EXPLORER);
+    private void prikaziOdabranuAkciju() {
+        Karta odabranaKarta = dohvatiOdabranuKartu();
+        if (odabranaKarta == null) {
+            labelaOdabranaAkcija.setText("Odaberi kartu iz ruke da vidis koji radnik ide uz nju.");
+            return;
+        }
+        TipRadnika potrebniTip = odabranaKarta.getTipAkcije().getPovezaniTipRadnika();
+        if (potrebniTip == TipRadnika.EXPLORER) {
+            labelaOdabranaAkcija.setText("Karta zahtijeva: " + potrebniTip + " - klikni Permafrost polje da odigras potez.");
+        } else {
+            labelaOdabranaAkcija.setText("Karta zahtijeva: " + potrebniTip + " - klikni 'Odigraj potez'.");
+        }
     }
 
-    @FXML
-    private void odaberiBuilder() {
-        postaviOdabraniTipRadnika(TipRadnika.BUILDER);
+    private Karta dohvatiOdabranuKartu() {
+        int odabraniIndeks = listaRukaKarata.getSelectionModel().getSelectedIndex();
+        if (odabraniIndeks < 0) {
+            return null;
+        }
+        return reviveEngine.getIgracNaPotezu().getRukaKarata().get(odabraniIndeks);
     }
 
-    @FXML
-    private void odaberiScholar() {
-        postaviOdabraniTipRadnika(TipRadnika.SCHOLAR);
-    }
-
-    @FXML
-    private void odaberiScientist() {
-        postaviOdabraniTipRadnika(TipRadnika.SCIENTIST);
-    }
-
-    private void postaviOdabraniTipRadnika(TipRadnika tipRadnika) {
-        odabraniTipRadnika = tipRadnika;
-        labelaPorukaPoteza.setText("Odabran radnik: " + tipRadnika);
+    private void odigrajPotezNaPolju(int redak, int stupac) {
+        Karta odabranaKarta = dohvatiOdabranuKartu();
+        if (odabranaKarta != null && odabranaKarta.getTipAkcije().getPovezaniTipRadnika() == TipRadnika.EXPLORER) {
+            odigrajPotez(redak, stupac);
+        }
     }
 
     @FXML
     private void odigrajPotez() {
+        odigrajPotez(-1, -1);
+    }
+
+    private void odigrajPotez(int redakPolja, int stupacPolja) {
         if (reviveEngine.jeIgraZavrsena()) {
             labelaPorukaPoteza.setText("Igra je vec zavrsena.");
             return;
         }
 
-        int odabraniIndeksKarte = listaRukaKarata.getSelectionModel().getSelectedIndex();
-        if (odabraniIndeksKarte < 0) {
+        Karta odabranaKarta = dohvatiOdabranuKartu();
+        if (odabranaKarta == null) {
             labelaPorukaPoteza.setText("Prvo odaberi kartu iz ruke.");
             return;
         }
 
-        if (odabraniTipRadnika == null) {
-            labelaPorukaPoteza.setText("Prvo odaberi tip radnika.");
-            return;
-        }
-
+        TipRadnika tipRadnika = odabranaKarta.getTipAkcije().getPovezaniTipRadnika();
         Igrac igracNaPotezu = reviveEngine.getIgracNaPotezu();
-        Karta odabranaKarta = igracNaPotezu.getRukaKarata().get(odabraniIndeksKarte);
         int brojRundePrijePoteza = reviveEngine.getTrenutnaRunda();
         String imeIgracaPrijePoteza = igracNaPotezu.getImeIgraca();
 
-        RezultatPoteza rezultatPoteza = reviveEngine.izvrsiPotez(odabranaKarta, odabraniTipRadnika);
+        RezultatPoteza rezultatPoteza = reviveEngine.izvrsiPotez(odabranaKarta, tipRadnika, redakPolja, stupacPolja);
         labelaPorukaPoteza.setText(rezultatPoteza.getPoruka());
 
         if (rezultatPoteza.isUspjesno()) {
-            zapisPoteza.zapisiPotez(brojRundePrijePoteza, imeIgracaPrijePoteza, odabranaKarta, odabraniTipRadnika);
-            PoljePermafrosta otopljenoPolje = rezultatPoteza.getOtopljenoPolje();
-            if (otopljenoPolje != null) {
-                Rectangle pravokutnikZaAnimaciju = pravokutniciPermafrosta[otopljenoPolje.getRedak()][otopljenoPolje.getStupac()];
-                new AnimacijaTopljenja().pokreniAnimacijuNaPolju(pravokutnikZaAnimaciju);
-            }
-            odabraniTipRadnika = null;
+            zapisPoteza.zapisiPotez(brojRundePrijePoteza, imeIgracaPrijePoteza, odabranaKarta, tipRadnika);
+            pomocneAkcijeKontrolera.pokreniAnimacijuAkoJePoljeOtopljeno(rezultatPoteza, pravokutniciPermafrosta);
         }
 
         azurirajSucelje();
@@ -134,35 +134,25 @@ public class GlavniKontroler {
     private void zavrsiPotez() {
         AsinkroniZadaci asinkroniZadaci = new AsinkroniZadaci();
         Task<Void> zadatakObrade = asinkroniZadaci.stvoriZadatakSimulacijeObrade();
-
         zadatakObrade.setOnSucceeded(dogadjaj -> Platform.runLater(this::zavrsiPotezNaGlavnojNiti));
-
         asinkroniZadaci.pokreniZadatakUPozadini(zadatakObrade);
     }
 
     private void zavrsiPotezNaGlavnojNiti() {
         reviveEngine.zavrsiPotezIPredajSljedecem();
-        odabraniTipRadnika = null;
 
         if (reviveEngine.jeIgraZavrsena()) {
             zapisPoteza.zavrsiZapis();
-            prikaziKrajIgre();
+            pomocneAkcijeKontrolera.prikaziKrajIgre(reviveEngine, labelaKrajIgre);
         }
 
         azurirajSucelje();
     }
 
-    private void prikaziKrajIgre() {
-        Bodovanje bodovanje = new Bodovanje();
-        Igrac pobjednik = bodovanje.pronadjiPobjednika(reviveEngine.getIgraci());
-        String tekstRezultata = bodovanje.formatirajKonacneRezultate(reviveEngine.getIgraci());
-
-        labelaKrajIgre.setText("Igra zavrsena! Pobjednik: " + pobjednik.getImeIgraca() + "\n" + tekstRezultata);
-    }
-
     private void azurirajSucelje() {
         azuriranjeSucelja.azurirajCijeloSucelje(reviveEngine, labelaTrenutniIgrac, labelaRunda,
-                listaRukaKarata, labelaResursiIgrac1, labelaResursiIgrac2);
+                listaRukaKarata, labelaResursiIgrac1, labelaResursiIgrac2, labelaStatusRadnika);
+        prikaziOdabranuAkciju();
     }
 
     @FXML

@@ -8,7 +8,6 @@ import hr.tvz.revive.model.PoljePermafrosta;
 import hr.tvz.revive.model.Radnik;
 import hr.tvz.revive.model.TipRadnika;
 import hr.tvz.revive.model.VrstaNagradePermafrosta;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,6 @@ public class ReviveEngine {
         this.trenutnaRunda = 1;
         this.indeksIgracaNaPotezu = 0;
     }
-
     public void pokreniNovuIgru(String imePrvogIgraca, String imeDrugogIgraca) {
         igraci.clear();
         igraci.add(new Igrac(imePrvogIgraca));
@@ -39,8 +37,7 @@ public class ReviveEngine {
         spilKarata = generatorKarata.generirajSpil();
 
         for (Igrac igrac : igraci) {
-            List<Karta> pocetnaRuka = generatorKarata.podijeliPocetnuRuku(spilKarata, 3);
-            igrac.getRukaKarata().addAll(pocetnaRuka);
+            igrac.getRukaKarata().addAll(generatorKarata.podijeliPocetnuRuku(spilKarata, 3));
         }
 
         trenutnaRunda = 1;
@@ -50,52 +47,58 @@ public class ReviveEngine {
     public Igrac getIgracNaPotezu() {
         return igraci.get(indeksIgracaNaPotezu);
     }
-
     public List<Igrac> getIgraci() {
         return igraci;
     }
-
     public PermafrostPloca getPermafrostPloca() {
         return permafrostPloca;
     }
-
     public List<Karta> getSpilKarata() {
         return spilKarata;
     }
-
     public int getTrenutnaRunda() {
         return trenutnaRunda;
     }
-
     public int getIndeksIgracaNaPotezu() {
         return indeksIgracaNaPotezu;
     }
 
     public RezultatPoteza izvrsiPotez(Karta odabranaKarta, TipRadnika tipRadnika) {
+        return izvrsiPotez(odabranaKarta, tipRadnika, -1, -1);
+    }
+
+    public RezultatPoteza izvrsiPotez(Karta odabranaKarta, TipRadnika tipRadnika, int redakPolja, int stupacPolja) {
         Igrac igracNaPotezu = getIgracNaPotezu();
         RezultatPoteza rezultatPoteza = new RezultatPoteza();
+        String greskaValidacije = validirajPotez(igracNaPotezu, odabranaKarta, tipRadnika);
 
-        if (!igracNaPotezu.getRukaKarata().contains(odabranaKarta)) {
+        if (greskaValidacije != null) {
             rezultatPoteza.setUspjesno(false);
-            rezultatPoteza.setPoruka("Igrac nema tu kartu u ruci.");
+            rezultatPoteza.setPoruka(greskaValidacije);
             return rezultatPoteza;
         }
 
         Radnik slobodniRadnik = igracNaPotezu.pronadjiSlobodnogRadnika(tipRadnika);
-        if (slobodniRadnik == null) {
-            rezultatPoteza.setUspjesno(false);
-            rezultatPoteza.setPoruka("Nema slobodnog radnika tog tipa.");
-            return rezultatPoteza;
-        }
-
         primijeniEfektKarte(igracNaPotezu, odabranaKarta);
         igracNaPotezu.getRukaKarata().remove(odabranaKarta);
-
-        primijeniEfektRadnika(igracNaPotezu, slobodniRadnik, rezultatPoteza);
+        primijeniEfektRadnika(igracNaPotezu, slobodniRadnik, rezultatPoteza, redakPolja, stupacPolja);
 
         rezultatPoteza.setUspjesno(true);
         rezultatPoteza.setPoruka("Potez uspjesno odigran.");
         return rezultatPoteza;
+    }
+
+    private String validirajPotez(Igrac igracNaPotezu, Karta odabranaKarta, TipRadnika tipRadnika) {
+        if (!igracNaPotezu.getRukaKarata().contains(odabranaKarta)) {
+            return "Igrac nema tu kartu u ruci.";
+        }
+        if (odabranaKarta.getTipAkcije().getPovezaniTipRadnika() != tipRadnika) {
+            return "Ta karta ne odgovara odabranom tipu radnika.";
+        }
+        if (igracNaPotezu.pronadjiSlobodnogRadnika(tipRadnika) == null) {
+            return "Nema slobodnog radnika tog tipa.";
+        }
+        return null;
     }
 
     private void primijeniEfektKarte(Igrac igrac, Karta karta) {
@@ -118,11 +121,11 @@ public class ReviveEngine {
         }
     }
 
-    private void primijeniEfektRadnika(Igrac igrac, Radnik radnik, RezultatPoteza rezultatPoteza) {
+    private void primijeniEfektRadnika(Igrac igrac, Radnik radnik, RezultatPoteza rezultatPoteza,
+                                       int redakPolja, int stupacPolja) {
         radnik.postavi();
-
         if (radnik.getTip() == TipRadnika.EXPLORER) {
-            izvrsiAkcijuExplorer(igrac, rezultatPoteza);
+            izvrsiAkcijuExplorer(igrac, rezultatPoteza, redakPolja, stupacPolja);
         } else if (radnik.getTip() == TipRadnika.BUILDER) {
             izvrsiAkcijuBuilder(igrac, rezultatPoteza);
         } else if (radnik.getTip() == TipRadnika.SCHOLAR) {
@@ -132,16 +135,18 @@ public class ReviveEngine {
         }
     }
 
-    private void izvrsiAkcijuExplorer(Igrac igrac, RezultatPoteza rezultatPoteza) {
-        PoljePermafrosta poljeZaTopljenje = permafrostPloca.pronadjiSljedecePrazamrznutoPolje();
-        if (poljeZaTopljenje != null) {
-            VrstaNagradePermafrosta vrstaNagrade = poljeZaTopljenje.getVrstaNagrade();
-            poljeZaTopljenje.otopiIPrimijeniNagradu(igrac);
-            rezultatPoteza.setOtopljenoPolje(poljeZaTopljenje);
-            rezultatPoteza.setPoruka("Explorer je otopio polje i osvojio nagradu: " + vrstaNagrade + ".");
-        } else {
-            rezultatPoteza.setPoruka("Sva Permafrost polja su vec otopljena.");
+    private void izvrsiAkcijuExplorer(Igrac igrac, RezultatPoteza rezultatPoteza, int redakPolja, int stupacPolja) {
+        PoljePermafrosta poljeZaTopljenje = permafrostPloca.pronadjiPoljeZaOtapanje(redakPolja, stupacPolja);
+
+        if (poljeZaTopljenje == null) {
+            rezultatPoteza.setPoruka("Odabrano polje ne postoji ili je vec otopljeno.");
+            return;
         }
+
+        VrstaNagradePermafrosta vrstaNagrade = poljeZaTopljenje.getVrstaNagrade();
+        poljeZaTopljenje.otopiIPrimijeniNagradu(igrac);
+        rezultatPoteza.setOtopljenoPolje(poljeZaTopljenje);
+        rezultatPoteza.setPoruka("Explorer je otopio polje i osvojio nagradu: " + vrstaNagrade + ".");
     }
 
     private void izvrsiAkcijuBuilder(Igrac igrac, RezultatPoteza rezultatPoteza) {
@@ -175,6 +180,9 @@ public class ReviveEngine {
         if (indeksIgracaNaPotezu >= igraci.size()) {
             indeksIgracaNaPotezu = 0;
             trenutnaRunda++;
+            for (Igrac igrac : igraci) {
+                igrac.resetirajRadnike();
+            }
         }
     }
 

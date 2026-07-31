@@ -53,6 +53,17 @@ public class PermafrostPloca implements Serializable {
         return null;
     }
 
+    public PoljePermafrosta pronadjiPoljeZaOtapanje(int redak, int stupac) {
+        if (redak < 0 || stupac < 0) {
+            return pronadjiSljedecePrazamrznutoPolje();
+        }
+        PoljePermafrosta odabranoPolje = pronadjiPolje(redak, stupac);
+        if (odabranoPolje != null && odabranoPolje.isOtopljeno()) {
+            return null;
+        }
+        return odabranoPolje;
+    }
+
     public int brojOtopljenihPolja() {
         int brojac = 0;
         for (PoljePermafrosta polje : polja) {

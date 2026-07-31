@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="hr.tvz.revive.kontroler.KontrolerReplay"
+            prefHeight="320.0" prefWidth="480.0"
+            style="-fx-background-color: #f4f6f8;">
+
+    <top>
+        <Label text="Replay odigranih poteza" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 16;"/>
+    </top>
+
+    <center>
+        <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+            <Label fx:id="labelaBrojKoraka" text="Korak 0 / 0" style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;"/>
+            <Label fx:id="labelaTekstPoteza" text="Nema zapisanih poteza." wrapText="true"
+                   style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 16;">
+            <Button fx:id="gumbPrethodniKorak" text="Prethodni korak" onAction="#prikaziPrethodniKorak" prefWidth="140"/>
+            <Button fx:id="gumbSljedeciKorak" text="Sljedeci korak" onAction="#prikaziSljedeciKorak" prefWidth="140"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

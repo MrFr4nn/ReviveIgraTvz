@@ -28,7 +28,6 @@ public class KatalogRadnikaGenerator {
 
         StringBuilder redakKataloga = new StringBuilder();
 
-        Field poljeImena = klasaTipRadnika.getField("name");
         String imeTipa = vrijednost.name();
 
         Field poljeOpisa = klasaTipRadnika.getDeclaredField("opisSposobnosti");

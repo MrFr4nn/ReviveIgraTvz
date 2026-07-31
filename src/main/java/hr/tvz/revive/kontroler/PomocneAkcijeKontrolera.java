@@ -1,16 +1,30 @@
 package hr.tvz.revive.kontroler;
 
+import hr.tvz.revive.animacija.AnimacijaTopljenja;
+import hr.tvz.revive.engine.Bodovanje;
 import hr.tvz.revive.engine.ReviveEngine;
+import hr.tvz.revive.engine.RezultatPoteza;
+import hr.tvz.revive.model.Igrac;
+import hr.tvz.revive.model.PoljePermafrosta;
 import hr.tvz.revive.model.StanjeIgre;
 import hr.tvz.revive.reflection.KatalogRadnikaGenerator;
 import hr.tvz.revive.serijalizacija.SpremanjeIgre;
+import hr.tvz.revive.xml.PodatakOPotezu;
 import hr.tvz.revive.xml.ReplaySustav;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import java.io.IOException;
+import java.util.List;
 
 public class PomocneAkcijeKontrolera {
 
     private static final String PUTANJA_XML_DNEVNIKA = "revive-log.xml";
+    private static final String PUTANJA_REPLAY_FXML = "/hr/tvz/revive/replay-ekran.fxml";
 
     public void spremiIgru(ReviveEngine reviveEngine, Label labelaPorukaPoteza) {
         StanjeIgre stanjeIgre = new StanjeIgre(reviveEngine.getIgraci(), reviveEngine.getPermafrostPloca(),
@@ -41,17 +55,44 @@ public class PomocneAkcijeKontrolera {
 
     public void prikaziKatalogRadnika() {
         KatalogRadnikaGenerator katalogRadnikaGenerator = new KatalogRadnikaGenerator();
-        String tekstKataloga = katalogRadnikaGenerator.generirajKatalog();
-
-        prikaziProzorInformacije("Katalog radnika", "Sposobnosti tipova radnika", tekstKataloga);
+        prikaziProzorInformacije("Katalog radnika", "Sposobnosti tipova radnika", katalogRadnikaGenerator.generirajKatalog());
     }
 
     public void prikaziReplay() {
-        ReplaySustav replaySustav = new ReplaySustav();
-        String tekstReplaya = replaySustav.generirajTekstualniReplay(PUTANJA_XML_DNEVNIKA);
-        String sadrzajZaPrikaz = tekstReplaya.isEmpty() ? "Nema jos zapisanih poteza." : tekstReplaya;
+        try {
+            ReplaySustav replaySustav = new ReplaySustav();
+            List<PodatakOPotezu> svilPotezi = replaySustav.ucitajSvePotezeRedom(PUTANJA_XML_DNEVNIKA);
 
-        prikaziProzorInformacije("Replay odigranih poteza", "Tok igre po rundama", sadrzajZaPrikaz);
+            FXMLLoader ucitavacFxml = new FXMLLoader(getClass().getResource(PUTANJA_REPLAY_FXML));
+            Parent korijenskiElement = ucitavacFxml.load();
+
+            KontrolerReplay kontrolerReplay = ucitavacFxml.getController();
+            kontrolerReplay.postaviPoteze(svilPotezi);
+
+            Stage prozorReplaya = new Stage();
+            prozorReplaya.setTitle("Replay odigranih poteza");
+            prozorReplaya.setScene(new Scene(korijenskiElement));
+            prozorReplaya.show();
+        } catch (IOException iznimka) {
+            System.out.println("Greska prilikom otvaranja replay prozora: " + iznimka.getMessage());
+        }
+    }
+
+    public void prikaziKrajIgre(ReviveEngine reviveEngine, Label labelaKrajIgre) {
+        Bodovanje bodovanje = new Bodovanje();
+        Igrac pobjednik = bodovanje.pronadjiPobjednika(reviveEngine.getIgraci());
+        String tekstRezultata = bodovanje.formatirajKonacneRezultate(reviveEngine.getIgraci());
+
+        labelaKrajIgre.setText("Igra zavrsena! Pobjednik: " + pobjednik.getImeIgraca() + "\n" + tekstRezultata);
+    }
+
+    public void pokreniAnimacijuAkoJePoljeOtopljeno(RezultatPoteza rezultatPoteza, Rectangle[][] pravokutnici) {
+        PoljePermafrosta otopljenoPolje = rezultatPoteza.getOtopljenoPolje();
+        if (otopljenoPolje == null) {
+            return;
+        }
+        Rectangle pravokutnikZaAnimaciju = pravokutnici[otopljenoPolje.getRedak()][otopljenoPolje.getStupac()];
+        new AnimacijaTopljenja().pokreniAnimacijuNaPolju(pravokutnikZaAnimaciju);
     }
 
     private void prikaziProzorInformacije(String naslov, String zaglavlje, String sadrzaj) {

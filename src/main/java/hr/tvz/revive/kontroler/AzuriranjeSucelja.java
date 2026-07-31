@@ -4,6 +4,7 @@ import hr.tvz.revive.engine.ReviveEngine;
 import hr.tvz.revive.model.Igrac;
 import hr.tvz.revive.model.Karta;
 import hr.tvz.revive.model.PermafrostPloca;
+import hr.tvz.revive.model.Radnik;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class AzuriranjeSucelja {
 
-    private static final int VELICINA_PRAVOKUTNIKA_POLJA = 60;
+    private static final int VELICINA_PRAVOKUTNIKA_POLJA = 70;
 
     public Rectangle[][] izgradiPermafrostMrezu(GridPane mrezaPermafrosta) {
         int velicina = PermafrostPloca.VELICINA;
@@ -25,6 +26,8 @@ public class AzuriranjeSucelja {
                 Rectangle pravokutnikPolja =
                         new Rectangle(VELICINA_PRAVOKUTNIKA_POLJA, VELICINA_PRAVOKUTNIKA_POLJA);
                 pravokutnikPolja.setFill(Color.DODGERBLUE);
+                pravokutnikPolja.setArcWidth(12);
+                pravokutnikPolja.setArcHeight(12);
                 pravokutniciPermafrosta[redak][stupac] = pravokutnikPolja;
                 mrezaPermafrosta.add(pravokutnikPolja, stupac, redak);
             }
@@ -33,9 +36,25 @@ public class AzuriranjeSucelja {
         return pravokutniciPermafrosta;
     }
 
+    public void postaviKlikoveNaPolja(Rectangle[][] pravokutnici, KlikNaPolje klikNaPolje) {
+        for (int redak = 0; redak < pravokutnici.length; redak++) {
+            for (int stupac = 0; stupac < pravokutnici[redak].length; stupac++) {
+                int redakZaKlik = redak;
+                int stupacZaKlik = stupac;
+                pravokutnici[redak][stupac].setOnMouseClicked(
+                        dogadjaj -> klikNaPolje.obradiKlik(redakZaKlik, stupacZaKlik));
+            }
+        }
+    }
+
+    public interface KlikNaPolje {
+        void obradiKlik(int redak, int stupac);
+    }
+
     public void azurirajCijeloSucelje(ReviveEngine reviveEngine, Label labelaTrenutniIgrac,
                                       Label labelaRunda, ListView<String> listaRukaKarata,
-                                      Label labelaResursiIgrac1, Label labelaResursiIgrac2) {
+                                      Label labelaResursiIgrac1, Label labelaResursiIgrac2,
+                                      Label labelaStatusRadnika) {
 
         Igrac igracNaPotezu = reviveEngine.getIgracNaPotezu();
 
@@ -44,6 +63,16 @@ public class AzuriranjeSucelja {
 
         azurirajListuRukeKarata(igracNaPotezu, listaRukaKarata);
         azurirajLabeleResursa(reviveEngine, labelaResursiIgrac1, labelaResursiIgrac2);
+        labelaStatusRadnika.setText(formatirajStatusRadnika(igracNaPotezu));
+    }
+
+    private String formatirajStatusRadnika(Igrac igracNaPotezu) {
+        StringBuilder statusRadnika = new StringBuilder();
+        for (Radnik radnik : igracNaPotezu.getRadnici()) {
+            String oznakaStatusa = radnik.isPostavljen() ? "ISKORISTEN" : "dostupan";
+            statusRadnika.append(radnik.getTip()).append(": ").append(oznakaStatusa).append("\n");
+        }
+        return statusRadnika.toString().trim();
     }
 
     private void azurirajListuRukeKarata(Igrac igracNaPotezu, ListView<String> listaRukaKarata) {
@@ -64,8 +93,8 @@ public class AzuriranjeSucelja {
     }
 
     private String formatirajStanjeIgraca(Igrac igrac) {
-        return igrac.getImeIgraca() + ": Hrana=" + igrac.getHrana()
-                + " Zupcanici=" + igrac.getZupcanici()
-                + " Bodovi=" + igrac.izracunajUkupneBodoveNaKraju();
+        return igrac.getImeIgraca() + "\n  Hrana: " + igrac.getHrana()
+                + "\n  Zupcanici: " + igrac.getZupcanici()
+                + "\n  Bodovi: " + igrac.izracunajUkupneBodoveNaKraju();
     }
 }
