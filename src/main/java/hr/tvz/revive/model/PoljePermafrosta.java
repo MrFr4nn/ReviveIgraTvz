@@ -6,15 +6,19 @@ public class PoljePermafrosta implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public static final int KOLICINA_HRANE_NAGRADA = 2;
+    public static final int KOLICINA_ZUPCANIKA_NAGRADA = 2;
+    public static final int KOLICINA_BODOVA_NAGRADA = 3;
+
     private int redak;
     private int stupac;
     private boolean otopljeno;
-    private int skriveniBonusBodova;
+    private VrstaNagradePermafrosta vrstaNagrade;
 
-    public PoljePermafrosta(int redak, int stupac, int skriveniBonusBodova) {
+    public PoljePermafrosta(int redak, int stupac, VrstaNagradePermafrosta vrstaNagrade) {
         this.redak = redak;
         this.stupac = stupac;
-        this.skriveniBonusBodova = skriveniBonusBodova;
+        this.vrstaNagrade = vrstaNagrade;
         this.otopljeno = false;
     }
 
@@ -30,15 +34,30 @@ public class PoljePermafrosta implements Serializable {
         return otopljeno;
     }
 
-    public int getSkriveniBonusBodova() {
-        return skriveniBonusBodova;
+    public VrstaNagradePermafrosta getVrstaNagrade() {
+        return vrstaNagrade;
     }
 
-    public int otopiIVratiBonus() {
+    public void otopiIPrimijeniNagradu(Igrac igrac) {
         if (otopljeno) {
-            return 0;
+            return;
         }
         otopljeno = true;
-        return skriveniBonusBodova;
+
+        switch (vrstaNagrade) {
+            case HRANA:
+                igrac.dodajHranu(KOLICINA_HRANE_NAGRADA);
+                break;
+            case ZUPCANICI:
+                igrac.dodajZupcanike(KOLICINA_ZUPCANIKA_NAGRADA);
+                break;
+            case BODOVI:
+                igrac.dodajBodove(KOLICINA_BODOVA_NAGRADA);
+                break;
+            case PRAZNO:
+                break;
+            default:
+                break;
+        }
     }
 }

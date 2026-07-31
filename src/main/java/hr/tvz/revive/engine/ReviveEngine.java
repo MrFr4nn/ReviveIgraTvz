@@ -7,16 +7,11 @@ import hr.tvz.revive.model.PermafrostPloca;
 import hr.tvz.revive.model.PoljePermafrosta;
 import hr.tvz.revive.model.Radnik;
 import hr.tvz.revive.model.TipRadnika;
+import hr.tvz.revive.model.VrstaNagradePermafrosta;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Glavni "motor" igre Revive. Koordinira poteze igraca, provjerava
- * pravila i izvrsava efekte karata i radnika.
- * Ovo je pojednostavljena, hot-seat verzija za 2 igraca na istom racunalu
- * (bez mrezne komunikacije).
- */
 public class ReviveEngine {
 
     public static final int BROJ_RUNDI = 5;
@@ -76,10 +71,6 @@ public class ReviveEngine {
         return indeksIgracaNaPotezu;
     }
 
-    /**
-     * Izvrsava potez igraca: odigrava odabranu kartu i postavlja
-     * odgovarajuceg radnika. Ovo je centralna metoda cijelog motora igre.
-     */
     public RezultatPoteza izvrsiPotez(Karta odabranaKarta, TipRadnika tipRadnika) {
         Igrac igracNaPotezu = getIgracNaPotezu();
         RezultatPoteza rezultatPoteza = new RezultatPoteza();
@@ -144,10 +135,10 @@ public class ReviveEngine {
     private void izvrsiAkcijuExplorer(Igrac igrac, RezultatPoteza rezultatPoteza) {
         PoljePermafrosta poljeZaTopljenje = permafrostPloca.pronadjiSljedecePrazamrznutoPolje();
         if (poljeZaTopljenje != null) {
-            int osvojeniBonus = poljeZaTopljenje.otopiIVratiBonus();
-            igrac.dodajBodove(osvojeniBonus);
+            VrstaNagradePermafrosta vrstaNagrade = poljeZaTopljenje.getVrstaNagrade();
+            poljeZaTopljenje.otopiIPrimijeniNagradu(igrac);
             rezultatPoteza.setOtopljenoPolje(poljeZaTopljenje);
-            rezultatPoteza.setPoruka("Explorer je otopio polje i osvojio " + osvojeniBonus + " bodova.");
+            rezultatPoteza.setPoruka("Explorer je otopio polje i osvojio nagradu: " + vrstaNagrade + ".");
         } else {
             rezultatPoteza.setPoruka("Sva Permafrost polja su vec otopljena.");
         }
@@ -179,9 +170,6 @@ public class ReviveEngine {
         rezultatPoteza.setPoruka("Scientist je pretvorio znanje u 1 dodatni bod.");
     }
 
-    /**
-     * Prelazi na sljedeceg igraca. Ako su svi igraci odigrali, povecava rundu.
-     */
     public void zavrsiPotezIPredajSljedecem() {
         indeksIgracaNaPotezu++;
         if (indeksIgracaNaPotezu >= igraci.size()) {

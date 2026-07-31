@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
 public class PermafrostPloca implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static final int VELICINA = 5;
+    public static final int VELICINA = 3;
 
     private List<PoljePermafrosta> polja;
 
@@ -21,10 +20,13 @@ public class PermafrostPloca implements Serializable {
 
     private void popuniPlocu() {
         Random nasumicniGenerator = new Random();
+        VrstaNagradePermafrosta[] sveVrsteNagrada = VrstaNagradePermafrosta.values();
+
         for (int redak = 0; redak < VELICINA; redak++) {
             for (int stupac = 0; stupac < VELICINA; stupac++) {
-                int bonus = nasumicniGenerator.nextInt(3) + 1;
-                polja.add(new PoljePermafrosta(redak, stupac, bonus));
+                int nasumicniIndeks = nasumicniGenerator.nextInt(sveVrsteNagrada.length);
+                VrstaNagradePermafrosta odabranaVrsta = sveVrsteNagrada[nasumicniIndeks];
+                polja.add(new PoljePermafrosta(redak, stupac, odabranaVrsta));
             }
         }
     }
