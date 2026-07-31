@@ -10,6 +10,7 @@ import hr.tvz.revive.xml.ZapisPoteza;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
@@ -47,6 +48,18 @@ public class GlavniKontroler {
     @FXML
     private GridPane mrezaPermafrosta;
 
+    @FXML
+    private Button gumbExplorer;
+
+    @FXML
+    private Button gumbBuilder;
+
+    @FXML
+    private Button gumbScholar;
+
+    @FXML
+    private Button gumbScientist;
+
     private ReviveEngine reviveEngine;
     private ZapisPoteza zapisPoteza;
     private AzuriranjeSucelja azuriranjeSucelja;
@@ -61,25 +74,26 @@ public class GlavniKontroler {
         pomocneAkcijeKontrolera = new PomocneAkcijeKontrolera();
         reviveEngine.pokreniNovuIgru("Igrac 1", "Igrac 2");
         zapisPoteza.zapocniZapis();
-
         pravokutniciPermafrosta = azuriranjeSucelja.izgradiPermafrostMrezu(mrezaPermafrosta);
         azuriranjeSucelja.postaviKlikoveNaPolja(pravokutniciPermafrosta, this::odigrajPotezNaPolju);
-        listaRukaKarata.getSelectionModel().selectedIndexProperty().addListener((obs, staro, novo) -> prikaziOdabranuAkciju());
+        listaRukaKarata.getSelectionModel().selectedIndexProperty().addListener((obs, staro, novo) -> azurirajGumbeRadnika());
         azurirajSucelje();
     }
 
-    private void prikaziOdabranuAkciju() {
-        Karta odabranaKarta = dohvatiOdabranuKartu();
-        if (odabranaKarta == null) {
-            labelaOdabranaAkcija.setText("Odaberi kartu iz ruke da vidis koji radnik ide uz nju.");
-            return;
-        }
-        TipRadnika potrebniTip = odabranaKarta.getTipAkcije().getPovezaniTipRadnika();
-        if (potrebniTip == TipRadnika.EXPLORER) {
-            labelaOdabranaAkcija.setText("Karta zahtijeva: " + potrebniTip + " - klikni Permafrost polje da odigras potez.");
-        } else {
-            labelaOdabranaAkcija.setText("Karta zahtijeva: " + potrebniTip + " - klikni 'Odigraj potez'.");
-        }
+    private void azurirajGumbeRadnika() {
+        String poruka = azuriranjeSucelja.azurirajGumbeRadnika(dohvatiOdabranuKartu(),
+                gumbExplorer, gumbBuilder, gumbScholar, gumbScientist);
+        labelaOdabranaAkcija.setText(poruka);
+    }
+
+    @FXML
+    private void odaberiExplorer() {
+        labelaPorukaPoteza.setText("Klikni Permafrost polje da odigras potez.");
+    }
+
+    @FXML
+    private void odaberiOstaloRadnika() {
+        odigrajPotez(-1, -1);
     }
 
     private Karta dohvatiOdabranuKartu() {
@@ -95,11 +109,6 @@ public class GlavniKontroler {
         if (odabranaKarta != null && odabranaKarta.getTipAkcije().getPovezaniTipRadnika() == TipRadnika.EXPLORER) {
             odigrajPotez(redak, stupac);
         }
-    }
-
-    @FXML
-    private void odigrajPotez() {
-        odigrajPotez(-1, -1);
     }
 
     private void odigrajPotez(int redakPolja, int stupacPolja) {
@@ -125,13 +134,13 @@ public class GlavniKontroler {
         if (rezultatPoteza.isUspjesno()) {
             zapisPoteza.zapisiPotez(brojRundePrijePoteza, imeIgracaPrijePoteza, odabranaKarta, tipRadnika);
             pomocneAkcijeKontrolera.pokreniAnimacijuAkoJePoljeOtopljeno(rezultatPoteza, pravokutniciPermafrosta);
+            pokreniAsinkronuPredajuPoteza();
+        } else {
+            azurirajSucelje();
         }
-
-        azurirajSucelje();
     }
 
-    @FXML
-    private void zavrsiPotez() {
+    private void pokreniAsinkronuPredajuPoteza() {
         AsinkroniZadaci asinkroniZadaci = new AsinkroniZadaci();
         Task<Void> zadatakObrade = asinkroniZadaci.stvoriZadatakSimulacijeObrade();
         zadatakObrade.setOnSucceeded(dogadjaj -> Platform.runLater(this::zavrsiPotezNaGlavnojNiti));
@@ -152,7 +161,7 @@ public class GlavniKontroler {
     private void azurirajSucelje() {
         azuriranjeSucelja.azurirajCijeloSucelje(reviveEngine, labelaTrenutniIgrac, labelaRunda,
                 listaRukaKarata, labelaResursiIgrac1, labelaResursiIgrac2, labelaStatusRadnika);
-        prikaziOdabranuAkciju();
+        azurirajGumbeRadnika();
     }
 
     @FXML

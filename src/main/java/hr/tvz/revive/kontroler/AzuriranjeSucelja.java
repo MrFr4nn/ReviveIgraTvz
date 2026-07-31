@@ -5,6 +5,9 @@ import hr.tvz.revive.model.Igrac;
 import hr.tvz.revive.model.Karta;
 import hr.tvz.revive.model.PermafrostPloca;
 import hr.tvz.revive.model.Radnik;
+import hr.tvz.revive.model.TipRadnika;
+
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
@@ -96,5 +99,22 @@ public class AzuriranjeSucelja {
         return igrac.getImeIgraca() + "\n  Hrana: " + igrac.getHrana()
                 + "\n  Zupcanici: " + igrac.getZupcanici()
                 + "\n  Bodovi: " + igrac.izracunajUkupneBodoveNaKraju();
+    }
+
+    public String azurirajGumbeRadnika(Karta odabranaKarta, Button gumbExplorer, Button gumbBuilder,
+                                       Button gumbScholar, Button gumbScientist) {
+        TipRadnika potrebniTip = odabranaKarta == null ? null : odabranaKarta.getTipAkcije().getPovezaniTipRadnika();
+
+        gumbExplorer.setDisable(potrebniTip != TipRadnika.EXPLORER);
+        gumbBuilder.setDisable(potrebniTip != TipRadnika.BUILDER);
+        gumbScholar.setDisable(potrebniTip != TipRadnika.SCHOLAR);
+        gumbScientist.setDisable(potrebniTip != TipRadnika.SCIENTIST);
+
+        if (potrebniTip == null) {
+            return "Odaberi kartu iz ruke da vidis koji radnik ide uz nju.";
+        } else if (potrebniTip == TipRadnika.EXPLORER) {
+            return "Karta zahtijeva: " + potrebniTip + " - klikni Permafrost polje.";
+        }
+        return "Karta zahtijeva: " + potrebniTip + " - klikni 'Odigraj potez'.";
     }
 }
