@@ -54,67 +54,65 @@ public class AzuriranjeSucelja {
         void obradiKlik(int redak, int stupac);
     }
 
-    public void azurirajCijeloSucelje(ReviveEngine reviveEngine, Label labelaTrenutniIgrac,
-                                      Label labelaRunda, ListView<String> listaRukaKarata,
-                                      Label labelaResursiIgrac1, Label labelaResursiIgrac2,
-                                      Label labelaStatusRadnika) {
+    public void azurirajCijeloSucelje(ReviveEngine reviveEngine, Label labelaTrenutniIgrac, Label labelaRunda,
+                                      ListView<String> listaKarataIgrac1, ListView<String> listaKarataIgrac2,
+                                      Label labelaStanjeIgrac1, Label labelaStanjeIgrac2, Label labelaSpil) {
 
-        Igrac igracNaPotezu = reviveEngine.getIgracNaPotezu();
-
-        labelaTrenutniIgrac.setText("Na potezu: " + igracNaPotezu.getImeIgraca());
-        labelaRunda.setText("Runda: " + reviveEngine.getTrenutnaRunda() + " / " + ReviveEngine.BROJ_RUNDI);
-
-        azurirajListuRukeKarata(igracNaPotezu, listaRukaKarata);
-        azurirajLabeleResursa(reviveEngine, labelaResursiIgrac1, labelaResursiIgrac2);
-        labelaStatusRadnika.setText(formatirajStatusRadnika(igracNaPotezu));
-    }
-
-    private String formatirajStatusRadnika(Igrac igracNaPotezu) {
-        StringBuilder statusRadnika = new StringBuilder();
-        for (Radnik radnik : igracNaPotezu.getRadnici()) {
-            String oznakaStatusa = radnik.isPostavljen() ? "ISKORISTEN" : "dostupan";
-            statusRadnika.append(radnik.getTip()).append(": ").append(oznakaStatusa).append("\n");
-        }
-        return statusRadnika.toString().trim();
-    }
-
-    private void azurirajListuRukeKarata(Igrac igracNaPotezu, ListView<String> listaRukaKarata) {
-        List<String> nazivKarataZaPrikaz = new ArrayList<>();
-        for (Karta karta : igracNaPotezu.getRukaKarata()) {
-            nazivKarataZaPrikaz.add(karta.toString());
-        }
-        listaRukaKarata.getItems().setAll(nazivKarataZaPrikaz);
-    }
-
-    private void azurirajLabeleResursa(ReviveEngine reviveEngine, Label labelaResursiIgrac1, Label labelaResursiIgrac2) {
         List<Igrac> igraci = reviveEngine.getIgraci();
         Igrac prviIgrac = igraci.get(0);
         Igrac drugiIgrac = igraci.get(1);
 
-        labelaResursiIgrac1.setText(formatirajStanjeIgraca(prviIgrac));
-        labelaResursiIgrac2.setText(formatirajStanjeIgraca(drugiIgrac));
+        labelaTrenutniIgrac.setText("Na potezu: " + reviveEngine.getIgracNaPotezu().getImeIgraca());
+        labelaRunda.setText("Runda: " + reviveEngine.getTrenutnaRunda() + " / " + ReviveEngine.BROJ_RUNDI);
+
+        azurirajListuKarata(prviIgrac, listaKarataIgrac1);
+        azurirajListuKarata(drugiIgrac, listaKarataIgrac2);
+
+        labelaStanjeIgrac1.setText(formatirajStanjeIgraca(prviIgrac));
+        labelaStanjeIgrac2.setText(formatirajStanjeIgraca(drugiIgrac));
+
+        labelaSpil.setText(reviveEngine.getSpilKarata().size() + " karata preostalo");
+    }
+
+    private void azurirajListuKarata(Igrac igrac, ListView<String> listaKarata) {
+        List<String> nazivKarataZaPrikaz = new ArrayList<>();
+        for (Karta karta : igrac.getRukaKarata()) {
+            nazivKarataZaPrikaz.add(karta.toString());
+        }
+        listaKarata.getItems().setAll(nazivKarataZaPrikaz);
     }
 
     private String formatirajStanjeIgraca(Igrac igrac) {
-        return igrac.getImeIgraca() + "\n  Hrana: " + igrac.getHrana()
-                + "\n  Zupcanici: " + igrac.getZupcanici()
-                + "\n  Bodovi: " + igrac.izracunajUkupneBodoveNaKraju();
+        return "Hrana: " + igrac.getHrana()
+                + "   Zupcanici: " + igrac.getZupcanici()
+                + "   Bodovi: " + igrac.izracunajUkupneBodoveNaKraju();
     }
 
-    public String azurirajGumbeRadnika(Karta odabranaKarta, Button gumbExplorer, Button gumbBuilder,
+    public String azurirajGumbeRadnika(Igrac igracNaPotezu, Karta odabranaKarta,
+                                       Button gumbExplorer, Button gumbBuilder,
                                        Button gumbScholar, Button gumbScientist) {
         TipRadnika potrebniTip = odabranaKarta == null ? null : odabranaKarta.getTipAkcije().getPovezaniTipRadnika();
 
-        gumbExplorer.setDisable(potrebniTip != TipRadnika.EXPLORER);
-        gumbBuilder.setDisable(potrebniTip != TipRadnika.BUILDER);
-        gumbScholar.setDisable(potrebniTip != TipRadnika.SCHOLAR);
-        gumbScientist.setDisable(potrebniTip != TipRadnika.SCIENTIST);
+        azurirajJedanGumb(gumbExplorer, "EXPLORER", igracNaPotezu, TipRadnika.EXPLORER, potrebniTip);
+        azurirajJedanGumb(gumbBuilder, "BUILDER", igracNaPotezu, TipRadnika.BUILDER, potrebniTip);
+        azurirajJedanGumb(gumbScholar, "SCHOLAR", igracNaPotezu, TipRadnika.SCHOLAR, potrebniTip);
+        azurirajJedanGumb(gumbScientist, "SCIENTIST", igracNaPotezu, TipRadnika.SCIENTIST, potrebniTip);
 
         if (potrebniTip == null) {
-            return "Odaberi kartu iz ruke da vidis koji radnik ide uz nju.";
+            return "Odaberi kartu iz svoje ruke.";
         } else if (potrebniTip == TipRadnika.EXPLORER) {
-            return "Karta zahtijeva: " + potrebniTip + " - klikni Permafrost polje.";
+            return "Karta zahtijeva EXPLORER - klikni Permafrost polje.";
         }
-        return "Karta zahtijeva: " + potrebniTip + " - klikni 'Odigraj potez'.";
+        return "Karta zahtijeva " + potrebniTip + " - klikni taj gumb.";
+    }
+
+    private void azurirajJedanGumb(Button gumb, String naziv, Igrac igracNaPotezu,
+                                   TipRadnika tipGumba, TipRadnika potrebniTip) {
+        Radnik radnik = igracNaPotezu.pronadjiSlobodnogRadnika(tipGumba);
+        boolean jeDostupan = radnik != null;
+        String oznakaStatusa = jeDostupan ? "dostupan" : "ISKORISTEN";
+
+        gumb.setText(naziv + "\n" + oznakaStatusa);
+        gumb.setDisable(potrebniTip != tipGumba || !jeDostupan);
     }
 }

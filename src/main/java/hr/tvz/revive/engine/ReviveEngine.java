@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ReviveEngine {
 
-    public static final int BROJ_RUNDI = 5;
+    public static final int BROJ_RUNDI = 3;
     public static final int MAKSIMALNI_BROJ_IGRACA = 2;
 
     private List<Igrac> igraci;
@@ -67,6 +67,7 @@ public class ReviveEngine {
         return izvrsiPotez(odabranaKarta, tipRadnika, -1, -1);
     }
 
+    /** Izvrsava potez: karta odredjuje efekt, radnik izvodi akciju. redakPolja/stupacPolja samo za EXPLORER. */
     public RezultatPoteza izvrsiPotez(Karta odabranaKarta, TipRadnika tipRadnika, int redakPolja, int stupacPolja) {
         Igrac igracNaPotezu = getIgracNaPotezu();
         RezultatPoteza rezultatPoteza = new RezultatPoteza();
@@ -161,13 +162,8 @@ public class ReviveEngine {
     }
 
     private void izvrsiAkcijuScholar(Igrac igrac, RezultatPoteza rezultatPoteza) {
-        if (!spilKarata.isEmpty()) {
-            Karta izvucenaKarta = spilKarata.remove(0);
-            igrac.getRukaKarata().add(izvucenaKarta);
-            rezultatPoteza.setPoruka("Scholar je izvukao kartu: " + izvucenaKarta.getNaziv());
-        } else {
-            rezultatPoteza.setPoruka("Spil karata je prazan.");
-        }
+        igrac.dodajBodove(2);
+        rezultatPoteza.setPoruka("Scholar je proucio drevne zapise i osvojio 2 boda.");
     }
 
     private void izvrsiAkcijuScientist(Igrac igrac, RezultatPoteza rezultatPoteza) {

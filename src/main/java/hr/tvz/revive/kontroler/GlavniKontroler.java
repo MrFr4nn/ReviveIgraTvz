@@ -28,13 +28,13 @@ public class GlavniKontroler {
     private Label labelaPorukaPoteza;
 
     @FXML
-    private Label labelaResursiIgrac1;
+    private Label labelaStanjeIgrac1;
 
     @FXML
-    private Label labelaResursiIgrac2;
+    private Label labelaStanjeIgrac2;
 
     @FXML
-    private Label labelaStatusRadnika;
+    private Label labelaSpil;
 
     @FXML
     private Label labelaOdabranaAkcija;
@@ -43,7 +43,10 @@ public class GlavniKontroler {
     private Label labelaKrajIgre;
 
     @FXML
-    private ListView<String> listaRukaKarata;
+    private ListView<String> listaKarataIgrac1;
+
+    @FXML
+    private ListView<String> listaKarataIgrac2;
 
     @FXML
     private GridPane mrezaPermafrosta;
@@ -76,12 +79,13 @@ public class GlavniKontroler {
         zapisPoteza.zapocniZapis();
         pravokutniciPermafrosta = azuriranjeSucelja.izgradiPermafrostMrezu(mrezaPermafrosta);
         azuriranjeSucelja.postaviKlikoveNaPolja(pravokutniciPermafrosta, this::odigrajPotezNaPolju);
-        listaRukaKarata.getSelectionModel().selectedIndexProperty().addListener((obs, staro, novo) -> azurirajGumbeRadnika());
+        listaKarataIgrac1.getSelectionModel().selectedIndexProperty().addListener((obs, s, n) -> azurirajGumbeRadnika());
+        listaKarataIgrac2.getSelectionModel().selectedIndexProperty().addListener((obs, s, n) -> azurirajGumbeRadnika());
         azurirajSucelje();
     }
 
     private void azurirajGumbeRadnika() {
-        String poruka = azuriranjeSucelja.azurirajGumbeRadnika(dohvatiOdabranuKartu(),
+        String poruka = azuriranjeSucelja.azurirajGumbeRadnika(reviveEngine.getIgracNaPotezu(), dohvatiOdabranuKartu(),
                 gumbExplorer, gumbBuilder, gumbScholar, gumbScientist);
         labelaOdabranaAkcija.setText(poruka);
     }
@@ -97,7 +101,8 @@ public class GlavniKontroler {
     }
 
     private Karta dohvatiOdabranuKartu() {
-        int odabraniIndeks = listaRukaKarata.getSelectionModel().getSelectedIndex();
+        ListView<String> listaIgracaNaPotezu = reviveEngine.getIndeksIgracaNaPotezu() == 0 ? listaKarataIgrac1 : listaKarataIgrac2;
+        int odabraniIndeks = listaIgracaNaPotezu.getSelectionModel().getSelectedIndex();
         if (odabraniIndeks < 0) {
             return null;
         }
@@ -119,7 +124,7 @@ public class GlavniKontroler {
 
         Karta odabranaKarta = dohvatiOdabranuKartu();
         if (odabranaKarta == null) {
-            labelaPorukaPoteza.setText("Prvo odaberi kartu iz ruke.");
+            labelaPorukaPoteza.setText("Prvo odaberi kartu iz svoje ruke.");
             return;
         }
 
@@ -149,18 +154,16 @@ public class GlavniKontroler {
 
     private void zavrsiPotezNaGlavnojNiti() {
         reviveEngine.zavrsiPotezIPredajSljedecem();
-
         if (reviveEngine.jeIgraZavrsena()) {
             zapisPoteza.zavrsiZapis();
             pomocneAkcijeKontrolera.prikaziKrajIgre(reviveEngine, labelaKrajIgre);
         }
-
         azurirajSucelje();
     }
 
     private void azurirajSucelje() {
         azuriranjeSucelja.azurirajCijeloSucelje(reviveEngine, labelaTrenutniIgrac, labelaRunda,
-                listaRukaKarata, labelaResursiIgrac1, labelaResursiIgrac2, labelaStatusRadnika);
+                listaKarataIgrac1, listaKarataIgrac2, labelaStanjeIgrac1, labelaStanjeIgrac2, labelaSpil);
         azurirajGumbeRadnika();
     }
 

@@ -1,41 +1,58 @@
 package hr.tvz.revive.reflection;
 
-import hr.tvz.revive.model.TipRadnika;
+import hr.tvz.revive.model.Igrac;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 public class KatalogRadnikaGenerator {
 
     public String generirajKatalog() {
-        StringBuilder katalogTeksta = new StringBuilder();
-        katalogTeksta.append("=== KATALOG TIPOVA RADNIKA ===\n\n");
+        StringBuilder izvjestaj = new StringBuilder();
+        Class<Igrac> klasaIgrac = Igrac.class;
 
-        try {
-            Class<TipRadnika> klasaTipRadnika = TipRadnika.class;
-            TipRadnika[] sveVrijednosti = klasaTipRadnika.getEnumConstants();
+        izvjestaj.append("=== REFLECTION ANALIZA IGRE: ").append(klasaIgrac.getSimpleName()).append(" ===\n\n");
+        dodajPolja(izvjestaj, klasaIgrac);
+        dodajMetode(izvjestaj, klasaIgrac);
 
-            for (TipRadnika vrijednost : sveVrijednosti) {
-                katalogTeksta.append(procitajPodatkeOJednomRadniku(klasaTipRadnika, vrijednost));
-            }
-        } catch (IllegalAccessException | NoSuchFieldException iznimka) {
-            katalogTeksta.append("Greska prilikom citanja kataloga: ").append(iznimka.getMessage());
-        }
-
-        return katalogTeksta.toString();
+        return izvjestaj.toString();
     }
 
-    private String procitajPodatkeOJednomRadniku(Class<TipRadnika> klasaTipRadnika, TipRadnika vrijednost)
-            throws IllegalAccessException, NoSuchFieldException {
+    private void dodajPolja(StringBuilder izvjestaj, Class<Igrac> klasaIgrac) {
+        izvjestaj.append("--- ATRIBUTI (polja) klase, otkriveni preko getDeclaredFields() ---\n");
+        Field[] svaPolja = klasaIgrac.getDeclaredFields();
 
-        StringBuilder redakKataloga = new StringBuilder();
+        for (Field polje : svaPolja) {
+            String modifikator = Modifier.toString(polje.getModifiers());
+            String tipPolja = polje.getType().getSimpleName();
+            izvjestaj.append(String.format("  %s %s %s%n", modifikator, tipPolja, polje.getName()));
+        }
+        izvjestaj.append("\nUkupno atributa: ").append(svaPolja.length).append("\n\n");
+    }
 
-        String imeTipa = vrijednost.name();
+    private void dodajMetode(StringBuilder izvjestaj, Class<Igrac> klasaIgrac) {
+        izvjestaj.append("--- METODE klase, otkrivene preko getDeclaredMethods() ---\n");
+        Method[] sveMetode = klasaIgrac.getDeclaredMethods();
 
-        Field poljeOpisa = klasaTipRadnika.getDeclaredField("opisSposobnosti");
-        poljeOpisa.setAccessible(true);
-        String opisSposobnosti = (String) poljeOpisa.get(vrijednost);
+        for (Method metoda : sveMetode) {
+            String modifikator = Modifier.toString(metoda.getModifiers());
+            String povratniTip = metoda.getReturnType().getSimpleName();
+            String parametri = opisiParametre(metoda);
+            izvjestaj.append(String.format("  %s %s %s(%s)%n", modifikator, povratniTip, metoda.getName(), parametri));
+        }
+        izvjestaj.append("\nUkupno metoda: ").append(sveMetode.length).append("\n\n");
+    }
 
-        redakKataloga.append("- ").append(imeTipa).append(": ").append(opisSposobnosti).append("\n");
+    private String opisiParametre(Method metoda) {
+        Class<?>[] tipoviParametara = metoda.getParameterTypes();
+        StringBuilder opisParametara = new StringBuilder();
 
-        return redakKataloga.toString();
+        for (int i = 0; i < tipoviParametara.length; i++) {
+            if (i > 0) {
+                opisParametara.append(", ");
+            }
+            opisParametara.append(tipoviParametara[i].getSimpleName());
+        }
+        return opisParametara.toString();
     }
 }

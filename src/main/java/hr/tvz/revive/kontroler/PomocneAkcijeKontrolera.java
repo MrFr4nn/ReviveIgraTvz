@@ -11,6 +11,7 @@ import hr.tvz.revive.reflection.KatalogRadnikaGenerator;
 import hr.tvz.revive.serijalizacija.SpremanjeIgre;
 import hr.tvz.revive.xml.PodatakOPotezu;
 import hr.tvz.revive.xml.ReplaySustav;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -55,7 +56,7 @@ public class PomocneAkcijeKontrolera {
 
     public void prikaziKatalogRadnika() {
         KatalogRadnikaGenerator katalogRadnikaGenerator = new KatalogRadnikaGenerator();
-        prikaziProzorInformacije("Katalog radnika", "Sposobnosti tipova radnika", katalogRadnikaGenerator.generirajKatalog());
+        prikaziProzorInformacije("Reflection katalog", "Dinamicka analiza klase Igrac", katalogRadnikaGenerator.generirajKatalog());
     }
 
     public void prikaziReplay() {
