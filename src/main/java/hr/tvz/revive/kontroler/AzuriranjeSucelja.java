@@ -6,7 +6,6 @@ import hr.tvz.revive.model.Karta;
 import hr.tvz.revive.model.PermafrostPloca;
 import hr.tvz.revive.model.Radnik;
 import hr.tvz.revive.model.TipRadnika;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -19,6 +18,7 @@ import java.util.List;
 public class AzuriranjeSucelja {
 
     private static final int VELICINA_PRAVOKUTNIKA_POLJA = 70;
+    private static final String POLEDJINA_KARTE = "🂠 Skrivena karta";
 
     public Rectangle[][] izgradiPermafrostMrezu(GridPane mrezaPermafrosta) {
         int velicina = PermafrostPloca.VELICINA;
@@ -56,28 +56,27 @@ public class AzuriranjeSucelja {
 
     public void azurirajCijeloSucelje(ReviveEngine reviveEngine, Label labelaTrenutniIgrac, Label labelaRunda,
                                       ListView<String> listaKarataIgrac1, ListView<String> listaKarataIgrac2,
-                                      Label labelaStanjeIgrac1, Label labelaStanjeIgrac2, Label labelaSpil) {
+                                      Label labelaStanjeIgrac1, Label labelaStanjeIgrac2) {
 
         List<Igrac> igraci = reviveEngine.getIgraci();
         Igrac prviIgrac = igraci.get(0);
         Igrac drugiIgrac = igraci.get(1);
+        boolean prviIgracNaPotezu = reviveEngine.getIndeksIgracaNaPotezu() == 0;
 
         labelaTrenutniIgrac.setText("Na potezu: " + reviveEngine.getIgracNaPotezu().getImeIgraca());
         labelaRunda.setText("Runda: " + reviveEngine.getTrenutnaRunda() + " / " + ReviveEngine.BROJ_RUNDI);
 
-        azurirajListuKarata(prviIgrac, listaKarataIgrac1);
-        azurirajListuKarata(drugiIgrac, listaKarataIgrac2);
+        azurirajListuKarata(prviIgrac, listaKarataIgrac1, prviIgracNaPotezu);
+        azurirajListuKarata(drugiIgrac, listaKarataIgrac2, !prviIgracNaPotezu);
 
         labelaStanjeIgrac1.setText(formatirajStanjeIgraca(prviIgrac));
         labelaStanjeIgrac2.setText(formatirajStanjeIgraca(drugiIgrac));
-
-        labelaSpil.setText(reviveEngine.getSpilKarata().size() + " karata preostalo");
     }
 
-    private void azurirajListuKarata(Igrac igrac, ListView<String> listaKarata) {
+    private void azurirajListuKarata(Igrac igrac, ListView<String> listaKarata, boolean prikaziPuniNaziv) {
         List<String> nazivKarataZaPrikaz = new ArrayList<>();
         for (Karta karta : igrac.getRukaKarata()) {
-            nazivKarataZaPrikaz.add(karta.toString());
+            nazivKarataZaPrikaz.add(prikaziPuniNaziv ? karta.toString() : POLEDJINA_KARTE);
         }
         listaKarata.getItems().setAll(nazivKarataZaPrikaz);
     }
@@ -85,6 +84,7 @@ public class AzuriranjeSucelja {
     private String formatirajStanjeIgraca(Igrac igrac) {
         return "Hrana: " + igrac.getHrana()
                 + "   Zupcanici: " + igrac.getZupcanici()
+                + "   Kristali: " + igrac.getKristali()
                 + "   Bodovi: " + igrac.izracunajUkupneBodoveNaKraju();
     }
 

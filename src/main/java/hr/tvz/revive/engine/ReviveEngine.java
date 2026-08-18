@@ -15,7 +15,7 @@ public class ReviveEngine {
 
     public static final int BROJ_RUNDI = 3;
     public static final int MAKSIMALNI_BROJ_IGRACA = 2;
-
+    private static final int CIJENA_KRISTALA_ZA_EXPLORER = 1;
     private List<Igrac> igraci;
     private PermafrostPloca permafrostPloca;
     private List<Karta> spilKarata;
@@ -114,8 +114,7 @@ public class ReviveEngine {
                 igrac.dodajBodove(karta.getVrijednost());
                 break;
             case DAJ_KRISTAL:
-                igrac.dodajZupcanike(karta.getVrijednost());
-                igrac.dodajHranu(karta.getVrijednost());
+                igrac.dodajKristale(karta.getVrijednost());
                 break;
             default:
                 break;
@@ -137,9 +136,15 @@ public class ReviveEngine {
     }
 
     private void izvrsiAkcijuExplorer(Igrac igrac, RezultatPoteza rezultatPoteza, int redakPolja, int stupacPolja) {
+        if (!igrac.potrosiKristale(CIJENA_KRISTALA_ZA_EXPLORER)) {
+            rezultatPoteza.setPoruka("Nedovoljno kristala za istrazivanje (potreban 1 kristal).");
+            return;
+        }
+
         PoljePermafrosta poljeZaTopljenje = permafrostPloca.pronadjiPoljeZaOtapanje(redakPolja, stupacPolja);
 
         if (poljeZaTopljenje == null) {
+            igrac.dodajKristale(CIJENA_KRISTALA_ZA_EXPLORER);
             rezultatPoteza.setPoruka("Odabrano polje ne postoji ili je vec otopljeno.");
             return;
         }

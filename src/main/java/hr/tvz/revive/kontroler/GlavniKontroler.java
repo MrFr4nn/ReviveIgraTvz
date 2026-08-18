@@ -34,9 +34,6 @@ public class GlavniKontroler {
     private Label labelaStanjeIgrac2;
 
     @FXML
-    private Label labelaSpil;
-
-    @FXML
     private Label labelaOdabranaAkcija;
 
     @FXML
@@ -83,7 +80,6 @@ public class GlavniKontroler {
         listaKarataIgrac2.getSelectionModel().selectedIndexProperty().addListener((obs, s, n) -> azurirajGumbeRadnika());
         azurirajSucelje();
     }
-
     private void azurirajGumbeRadnika() {
         String poruka = azuriranjeSucelja.azurirajGumbeRadnika(reviveEngine.getIgracNaPotezu(), dohvatiOdabranuKartu(),
                 gumbExplorer, gumbBuilder, gumbScholar, gumbScientist);
@@ -121,7 +117,6 @@ public class GlavniKontroler {
             labelaPorukaPoteza.setText("Igra je vec zavrsena.");
             return;
         }
-
         Karta odabranaKarta = dohvatiOdabranuKartu();
         if (odabranaKarta == null) {
             labelaPorukaPoteza.setText("Prvo odaberi kartu iz svoje ruke.");
@@ -135,7 +130,6 @@ public class GlavniKontroler {
 
         RezultatPoteza rezultatPoteza = reviveEngine.izvrsiPotez(odabranaKarta, tipRadnika, redakPolja, stupacPolja);
         labelaPorukaPoteza.setText(rezultatPoteza.getPoruka());
-
         if (rezultatPoteza.isUspjesno()) {
             zapisPoteza.zapisiPotez(brojRundePrijePoteza, imeIgracaPrijePoteza, odabranaKarta, tipRadnika);
             pomocneAkcijeKontrolera.pokreniAnimacijuAkoJePoljeOtopljeno(rezultatPoteza, pravokutniciPermafrosta);
@@ -160,10 +154,9 @@ public class GlavniKontroler {
         }
         azurirajSucelje();
     }
-
     private void azurirajSucelje() {
         azuriranjeSucelja.azurirajCijeloSucelje(reviveEngine, labelaTrenutniIgrac, labelaRunda,
-                listaKarataIgrac1, listaKarataIgrac2, labelaStanjeIgrac1, labelaStanjeIgrac2, labelaSpil);
+                listaKarataIgrac1, listaKarataIgrac2, labelaStanjeIgrac1, labelaStanjeIgrac2);
         azurirajGumbeRadnika();
     }
 
