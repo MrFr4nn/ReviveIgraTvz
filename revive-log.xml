@@ -1,9 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<dnevnikIgre>
-    <potez igrac="Igrac 1" karta="Cuvar Znanja (za Scientist)" radnik="SCIENTIST" runda="1"/>
-    <potez igrac="Igrac 2" karta="Knjiznicar (za Scholar)" radnik="SCHOLAR" runda="1"/>
-    <potez igrac="Igrac 1" karta="Pustolov (za Explorer)" radnik="EXPLORER" runda="2"/>
-    <potez igrac="Igrac 2" karta="Tragac Kristala (za Explorer)" radnik="EXPLORER" runda="2"/>
-    <potez igrac="Igrac 1" karta="Mehanicar (za Builder)" radnik="BUILDER" runda="3"/>
-    <potez igrac="Igrac 2" karta="Rudar (za Builder)" radnik="BUILDER" runda="3"/>
-</dnevnikIgre>
+<dnevnikIgre/>

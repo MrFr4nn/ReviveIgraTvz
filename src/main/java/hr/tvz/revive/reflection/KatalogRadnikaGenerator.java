@@ -1,46 +1,55 @@
 package hr.tvz.revive.reflection;
 
 import hr.tvz.revive.model.Igrac;
+import hr.tvz.revive.model.Karta;
+import hr.tvz.revive.model.Masina;
+import hr.tvz.revive.model.PermafrostPloca;
+import hr.tvz.revive.model.PoljePermafrosta;
+import hr.tvz.revive.model.Radnik;
+import hr.tvz.revive.model.StanjeIgre;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 public class KatalogRadnikaGenerator {
 
+    private static final Class<?>[] MODEL_KLASE = {
+            Igrac.class, Karta.class, Radnik.class, Masina.class,
+            PermafrostPloca.class, PoljePermafrosta.class, StanjeIgre.class
+    };
+
     public String generirajKatalog() {
         StringBuilder izvjestaj = new StringBuilder();
-        Class<Igrac> klasaIgrac = Igrac.class;
+        izvjestaj.append("=== REFLECTION ANALIZA CIJELOG MODELA IGRE ===\n\n");
 
-        izvjestaj.append("=== REFLECTION ANALIZA IGRE: ").append(klasaIgrac.getSimpleName()).append(" ===\n\n");
-        dodajPolja(izvjestaj, klasaIgrac);
-        dodajMetode(izvjestaj, klasaIgrac);
+        for (Class<?> klasa : MODEL_KLASE) {
+            dodajAnalizuKlase(izvjestaj, klasa);
+        }
 
         return izvjestaj.toString();
     }
 
-    private void dodajPolja(StringBuilder izvjestaj, Class<Igrac> klasaIgrac) {
-        izvjestaj.append("--- ATRIBUTI (polja) klase, otkriveni preko getDeclaredFields() ---\n");
-        Field[] svaPolja = klasaIgrac.getDeclaredFields();
+    private void dodajAnalizuKlase(StringBuilder izvjestaj, Class<?> klasa) {
+        izvjestaj.append("--- KLASA: ").append(klasa.getSimpleName()).append(" ---\n");
 
+        Field[] svaPolja = klasa.getDeclaredFields();
+        izvjestaj.append("Atributi (").append(svaPolja.length).append("):\n");
         for (Field polje : svaPolja) {
             String modifikator = Modifier.toString(polje.getModifiers());
-            String tipPolja = polje.getType().getSimpleName();
-            izvjestaj.append(String.format("  %s %s %s%n", modifikator, tipPolja, polje.getName()));
+            izvjestaj.append("  ").append(modifikator).append(" ")
+                    .append(polje.getType().getSimpleName()).append(" ")
+                    .append(polje.getName()).append("\n");
         }
-        izvjestaj.append("\nUkupno atributa: ").append(svaPolja.length).append("\n\n");
-    }
 
-    private void dodajMetode(StringBuilder izvjestaj, Class<Igrac> klasaIgrac) {
-        izvjestaj.append("--- METODE klase, otkrivene preko getDeclaredMethods() ---\n");
-        Method[] sveMetode = klasaIgrac.getDeclaredMethods();
-
+        Method[] sveMetode = klasa.getDeclaredMethods();
+        izvjestaj.append("Metode (").append(sveMetode.length).append("):\n");
         for (Method metoda : sveMetode) {
             String modifikator = Modifier.toString(metoda.getModifiers());
-            String povratniTip = metoda.getReturnType().getSimpleName();
-            String parametri = opisiParametre(metoda);
-            izvjestaj.append(String.format("  %s %s %s(%s)%n", modifikator, povratniTip, metoda.getName(), parametri));
+            izvjestaj.append("  ").append(modifikator).append(" ")
+                    .append(metoda.getReturnType().getSimpleName()).append(" ")
+                    .append(metoda.getName()).append("(").append(opisiParametre(metoda)).append(")\n");
         }
-        izvjestaj.append("\nUkupno metoda: ").append(sveMetode.length).append("\n\n");
+        izvjestaj.append("\n");
     }
 
     private String opisiParametre(Method metoda) {

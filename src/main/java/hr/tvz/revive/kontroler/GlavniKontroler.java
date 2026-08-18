@@ -69,19 +69,24 @@ public class GlavniKontroler {
     @FXML
     public void initialize() {
         reviveEngine = new ReviveEngine();
-        zapisPoteza = new ZapisPoteza();
         azuriranjeSucelja = new AzuriranjeSucelja();
         pomocneAkcijeKontrolera = new PomocneAkcijeKontrolera();
-        reviveEngine.pokreniNovuIgru("Igrac 1", "Igrac 2");
-        zapisPoteza.zapocniZapis();
         pravokutniciPermafrosta = azuriranjeSucelja.izgradiPermafrostMrezu(mrezaPermafrosta);
         azuriranjeSucelja.postaviKlikoveNaPolja(pravokutniciPermafrosta, this::odigrajPotezNaPolju);
         listaKarataIgrac1.getSelectionModel().selectedIndexProperty().addListener((obs, s, n) -> azurirajGumbeRadnika());
         listaKarataIgrac2.getSelectionModel().selectedIndexProperty().addListener((obs, s, n) -> azurirajGumbeRadnika());
+        pokreniNovuPartiju();
+    }
+    private void pokreniNovuPartiju() {
+        zapisPoteza = new ZapisPoteza();
+        reviveEngine.pokreniNovuIgru("Igrac 1", "Igrac 2");
+        zapisPoteza.zapocniZapis();
+        labelaKrajIgre.setText("");
+        labelaPorukaPoteza.setText("");
         azurirajSucelje();
     }
     private void azurirajGumbeRadnika() {
-        String poruka = azuriranjeSucelja.azurirajGumbeRadnika(reviveEngine.getIgracNaPotezu(), dohvatiOdabranuKartu(),
+        String poruka = azuriranjeSucelja.azurirajGumbeRadnika(dohvatiOdabranuKartu(),
                 gumbExplorer, gumbBuilder, gumbScholar, gumbScientist);
         labelaOdabranaAkcija.setText(poruka);
     }
@@ -90,7 +95,6 @@ public class GlavniKontroler {
     private void odaberiExplorer() {
         labelaPorukaPoteza.setText("Klikni Permafrost polje da odigras potez.");
     }
-
     @FXML
     private void odaberiOstaloRadnika() {
         odigrajPotez(-1, -1);
@@ -104,7 +108,6 @@ public class GlavniKontroler {
         }
         return reviveEngine.getIgracNaPotezu().getRukaKarata().get(odabraniIndeks);
     }
-
     private void odigrajPotezNaPolju(int redak, int stupac) {
         Karta odabranaKarta = dohvatiOdabranuKartu();
         if (odabranaKarta != null && odabranaKarta.getTipAkcije().getPovezaniTipRadnika() == TipRadnika.EXPLORER) {
@@ -138,7 +141,6 @@ public class GlavniKontroler {
             azurirajSucelje();
         }
     }
-
     private void pokreniAsinkronuPredajuPoteza() {
         AsinkroniZadaci asinkroniZadaci = new AsinkroniZadaci();
         Task<Void> zadatakObrade = asinkroniZadaci.stvoriZadatakSimulacijeObrade();
@@ -164,20 +166,21 @@ public class GlavniKontroler {
     private void spremiIgru() {
         pomocneAkcijeKontrolera.spremiIgru(reviveEngine, labelaPorukaPoteza);
     }
-
     @FXML
     private void ucitajIgru() {
-        pomocneAkcijeKontrolera.ucitajIgru(labelaPorukaPoteza);
+        pomocneAkcijeKontrolera.ucitajIgru(reviveEngine, labelaPorukaPoteza);
         azurirajSucelje();
     }
-
     @FXML
     private void prikaziKatalogRadnika() {
         pomocneAkcijeKontrolera.prikaziKatalogRadnika();
     }
-
     @FXML
     private void prikaziReplay() {
         pomocneAkcijeKontrolera.prikaziReplay();
+    }
+    @FXML
+    private void igrajPonovno() {
+        pokreniNovuPartiju();
     }
 }

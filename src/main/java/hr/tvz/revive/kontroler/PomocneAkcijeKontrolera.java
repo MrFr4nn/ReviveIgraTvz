@@ -11,7 +11,6 @@ import hr.tvz.revive.reflection.KatalogRadnikaGenerator;
 import hr.tvz.revive.serijalizacija.SpremanjeIgre;
 import hr.tvz.revive.xml.PodatakOPotezu;
 import hr.tvz.revive.xml.ReplaySustav;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -34,29 +33,27 @@ public class PomocneAkcijeKontrolera {
         SpremanjeIgre spremanjeIgre = new SpremanjeIgre();
         boolean uspjesnoSpremljeno = spremanjeIgre.spremiIgru(stanjeIgre);
 
-        if (uspjesnoSpremljeno) {
-            labelaPorukaPoteza.setText("Igra je uspjesno spremljena.");
-        } else {
-            labelaPorukaPoteza.setText("Greska prilikom spremanja igre.");
-        }
+        labelaPorukaPoteza.setText(uspjesnoSpremljeno
+                ? "Igra je uspjesno spremljena." : "Greska prilikom spremanja igre.");
     }
 
-    public StanjeIgre ucitajIgru(Label labelaPorukaPoteza) {
+    public boolean ucitajIgru(ReviveEngine reviveEngine, Label labelaPorukaPoteza) {
         SpremanjeIgre spremanjeIgre = new SpremanjeIgre();
         StanjeIgre ucitanoStanje = spremanjeIgre.ucitajIgru();
 
         if (ucitanoStanje == null) {
             labelaPorukaPoteza.setText("Nema spremljene igre za ucitati.");
-        } else {
-            labelaPorukaPoteza.setText("Igra je uspjesno ucitana.");
+            return false;
         }
 
-        return ucitanoStanje;
+        reviveEngine.primijeniUcitanoStanje(ucitanoStanje);
+        labelaPorukaPoteza.setText("Igra je uspjesno ucitana.");
+        return true;
     }
 
     public void prikaziKatalogRadnika() {
         KatalogRadnikaGenerator katalogRadnikaGenerator = new KatalogRadnikaGenerator();
-        prikaziProzorInformacije("Reflection katalog", "Dinamicka analiza klase Igrac", katalogRadnikaGenerator.generirajKatalog());
+        prikaziProzorInformacije("Reflection katalog", "Dinamicka analiza modela igre", katalogRadnikaGenerator.generirajKatalog());
     }
 
     public void prikaziReplay() {
@@ -66,7 +63,6 @@ public class PomocneAkcijeKontrolera {
 
             FXMLLoader ucitavacFxml = new FXMLLoader(getClass().getResource(PUTANJA_REPLAY_FXML));
             Parent korijenskiElement = ucitavacFxml.load();
-
             KontrolerReplay kontrolerReplay = ucitavacFxml.getController();
             kontrolerReplay.postaviPoteze(svilPotezi);
 
@@ -82,9 +78,9 @@ public class PomocneAkcijeKontrolera {
     public void prikaziKrajIgre(ReviveEngine reviveEngine, Label labelaKrajIgre) {
         Bodovanje bodovanje = new Bodovanje();
         Igrac pobjednik = bodovanje.pronadjiPobjednika(reviveEngine.getIgraci());
-        String tekstRezultata = bodovanje.formatirajKonacneRezultate(reviveEngine.getIgraci());
 
-        labelaKrajIgre.setText("Igra zavrsena! Pobjednik: " + pobjednik.getImeIgraca() + "\n" + tekstRezultata);
+        labelaKrajIgre.setText("Igra zavrsena!\nPobjednik: " + pobjednik.getImeIgraca()
+                + " (" + pobjednik.izracunajUkupneBodoveNaKraju() + " bodova)");
     }
 
     public void pokreniAnimacijuAkoJePoljeOtopljeno(RezultatPoteza rezultatPoteza, Rectangle[][] pravokutnici) {

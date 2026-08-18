@@ -18,6 +18,8 @@ public class Igrac implements Serializable {
     private int zupcanici;
     private int kristali;
     private int bodovi;
+    private int brojNaucenihZapisa;
+    private int brojIzucenihEksperimenata;
 
     public Igrac(String imeIgraca) {
         this.imeIgraca = imeIgraca;
@@ -28,6 +30,8 @@ public class Igrac implements Serializable {
         this.zupcanici = 2;
         this.kristali = 0;
         this.bodovi = 0;
+        this.brojNaucenihZapisa = 0;
+        this.brojIzucenihEksperimenata = 0;
 
         radnici.add(new Radnik(TipRadnika.EXPLORER));
         radnici.add(new Radnik(TipRadnika.BUILDER));
@@ -67,6 +71,14 @@ public class Igrac implements Serializable {
         return bodovi;
     }
 
+    public int getBrojNaucenihZapisa() {
+        return brojNaucenihZapisa;
+    }
+
+    public int getBrojIzucenihEksperimenata() {
+        return brojIzucenihEksperimenata;
+    }
+
     public void dodajHranu(int kolicina) {
         hrana = Math.min(hrana + kolicina, MAKSIMALNI_RESURS);
     }
@@ -81,6 +93,14 @@ public class Igrac implements Serializable {
 
     public void dodajBodove(int kolicina) {
         bodovi = bodovi + kolicina;
+    }
+
+    public void dodajNaucenZapis() {
+        brojNaucenihZapisa = brojNaucenihZapisa + 1;
+    }
+
+    public void dodajIzucenEksperiment() {
+        brojIzucenihEksperimenata = brojIzucenihEksperimenata + 1;
     }
 
     public boolean potrosiZupcanike(int kolicina) {

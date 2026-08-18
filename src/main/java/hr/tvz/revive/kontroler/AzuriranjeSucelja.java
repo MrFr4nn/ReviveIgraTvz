@@ -4,7 +4,6 @@ import hr.tvz.revive.engine.ReviveEngine;
 import hr.tvz.revive.model.Igrac;
 import hr.tvz.revive.model.Karta;
 import hr.tvz.revive.model.PermafrostPloca;
-import hr.tvz.revive.model.Radnik;
 import hr.tvz.revive.model.TipRadnika;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,7 +17,7 @@ import java.util.List;
 public class AzuriranjeSucelja {
 
     private static final int VELICINA_PRAVOKUTNIKA_POLJA = 70;
-    private static final String POLEDJINA_KARTE = "🂠 Skrivena karta";
+    private static final String POLEDJINA_KARTE = "Okrenuta karta";
 
     public Rectangle[][] izgradiPermafrostMrezu(GridPane mrezaPermafrosta) {
         int velicina = PermafrostPloca.VELICINA;
@@ -85,18 +84,20 @@ public class AzuriranjeSucelja {
         return "Hrana: " + igrac.getHrana()
                 + "   Zupcanici: " + igrac.getZupcanici()
                 + "   Kristali: " + igrac.getKristali()
-                + "   Bodovi: " + igrac.izracunajUkupneBodoveNaKraju();
+                + "\nMasine: " + igrac.getIzgradjeneMasine().size()
+                + "   Zapisi: " + igrac.getBrojNaucenihZapisa()
+                + "   Eksperimenti: " + igrac.getBrojIzucenihEksperimenata()
+                + "\nBodovi: " + igrac.izracunajUkupneBodoveNaKraju();
     }
 
-    public String azurirajGumbeRadnika(Igrac igracNaPotezu, Karta odabranaKarta,
-                                       Button gumbExplorer, Button gumbBuilder,
+    public String azurirajGumbeRadnika(Karta odabranaKarta, Button gumbExplorer, Button gumbBuilder,
                                        Button gumbScholar, Button gumbScientist) {
         TipRadnika potrebniTip = odabranaKarta == null ? null : odabranaKarta.getTipAkcije().getPovezaniTipRadnika();
 
-        azurirajJedanGumb(gumbExplorer, "EXPLORER", igracNaPotezu, TipRadnika.EXPLORER, potrebniTip);
-        azurirajJedanGumb(gumbBuilder, "BUILDER", igracNaPotezu, TipRadnika.BUILDER, potrebniTip);
-        azurirajJedanGumb(gumbScholar, "SCHOLAR", igracNaPotezu, TipRadnika.SCHOLAR, potrebniTip);
-        azurirajJedanGumb(gumbScientist, "SCIENTIST", igracNaPotezu, TipRadnika.SCIENTIST, potrebniTip);
+        gumbExplorer.setDisable(potrebniTip != TipRadnika.EXPLORER);
+        gumbBuilder.setDisable(potrebniTip != TipRadnika.BUILDER);
+        gumbScholar.setDisable(potrebniTip != TipRadnika.SCHOLAR);
+        gumbScientist.setDisable(potrebniTip != TipRadnika.SCIENTIST);
 
         if (potrebniTip == null) {
             return "Odaberi kartu iz svoje ruke.";
@@ -104,15 +105,5 @@ public class AzuriranjeSucelja {
             return "Karta zahtijeva EXPLORER - klikni Permafrost polje.";
         }
         return "Karta zahtijeva " + potrebniTip + " - klikni taj gumb.";
-    }
-
-    private void azurirajJedanGumb(Button gumb, String naziv, Igrac igracNaPotezu,
-                                   TipRadnika tipGumba, TipRadnika potrebniTip) {
-        Radnik radnik = igracNaPotezu.pronadjiSlobodnogRadnika(tipGumba);
-        boolean jeDostupan = radnik != null;
-        String oznakaStatusa = jeDostupan ? "dostupan" : "ISKORISTEN";
-
-        gumb.setText(naziv + "\n" + oznakaStatusa);
-        gumb.setDisable(potrebniTip != tipGumba || !jeDostupan);
     }
 }

@@ -3,6 +3,7 @@ package hr.tvz.revive.engine;
 import hr.tvz.revive.model.Igrac;
 import java.util.List;
 
+
 public class Bodovanje {
 
     public Igrac pronadjiPobjednika(List<Igrac> igraci) {

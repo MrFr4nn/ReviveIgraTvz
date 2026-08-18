@@ -25,7 +25,7 @@
     </top>
 
     <left>
-        <VBox fx:id="panelIgrac1" spacing="10" prefWidth="270" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #dcdfe3; -fx-border-width: 0 2 0 0;">
+        <VBox spacing="10" prefWidth="270" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #dcdfe3; -fx-border-width: 0 2 0 0;">
             <Label text="IGRAC 1" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
             <Label fx:id="labelaStanjeIgrac1" text="-" wrapText="true" style="-fx-font-size: 12px;"/>
             <Separator/>
@@ -35,7 +35,7 @@
     </left>
 
     <right>
-        <VBox fx:id="panelIgrac2" spacing="10" prefWidth="270" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #dcdfe3; -fx-border-width: 0 0 0 2;">
+        <VBox spacing="10" prefWidth="270" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #dcdfe3; -fx-border-width: 0 0 0 2;">
             <Label text="IGRAC 2" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #c0392b;"/>
             <Label fx:id="labelaStanjeIgrac2" text="-" wrapText="true" style="-fx-font-size: 12px;"/>
             <Separator/>
@@ -45,7 +45,7 @@
     </right>
 
     <center>
-        <VBox spacing="18" alignment="TOP_CENTER" style="-fx-padding: 20 30 20 30;">
+        <VBox spacing="16" alignment="TOP_CENTER" style="-fx-padding: 18 30 18 30;">
 
             <VBox spacing="6" alignment="CENTER">
                 <Label text="Permafrost ploca" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
@@ -60,17 +60,17 @@
                    style="-fx-font-size: 13px; -fx-text-fill: #2980b9; -fx-font-weight: bold;"/>
 
             <GridPane hgap="10" vgap="10" alignment="CENTER">
-                <Button fx:id="gumbExplorer" text="EXPLORER\ndostupan" onAction="#odaberiExplorer" prefWidth="180" prefHeight="52"
-                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-text-alignment: center;"
+                <Button fx:id="gumbExplorer" text="EXPLORER" onAction="#odaberiExplorer" prefWidth="180" prefHeight="42"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;"
                         GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <Button fx:id="gumbBuilder" text="BUILDER\ndostupan" onAction="#odaberiOstaloRadnika" prefWidth="180" prefHeight="52"
-                        style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-weight: bold; -fx-text-alignment: center;"
+                <Button fx:id="gumbBuilder" text="BUILDER" onAction="#odaberiOstaloRadnika" prefWidth="180" prefHeight="42"
+                        style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-weight: bold;"
                         GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                <Button fx:id="gumbScholar" text="SCHOLAR\ndostupan" onAction="#odaberiOstaloRadnika" prefWidth="180" prefHeight="52"
-                        style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold; -fx-text-alignment: center;"
+                <Button fx:id="gumbScholar" text="SCHOLAR" onAction="#odaberiOstaloRadnika" prefWidth="180" prefHeight="42"
+                        style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold;"
                         GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <Button fx:id="gumbScientist" text="SCIENTIST\ndostupan" onAction="#odaberiOstaloRadnika" prefWidth="180" prefHeight="52"
-                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-text-alignment: center;"
+                <Button fx:id="gumbScientist" text="SCIENTIST" onAction="#odaberiOstaloRadnika" prefWidth="180" prefHeight="42"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"
                         GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             </GridPane>
 
@@ -79,6 +79,9 @@
 
             <Label fx:id="labelaKrajIgre" text="" wrapText="true" maxWidth="600"
                    style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+
+            <Button fx:id="gumbIgrajPonovno" text="Igraj ponovno" onAction="#igrajPonovno" prefWidth="200" prefHeight="34"
+                    style="-fx-background-color: #1f2d3d; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold;"/>
 
         </VBox>
     </center>
