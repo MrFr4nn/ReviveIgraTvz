@@ -1,7 +1,9 @@
 package hr.tvz.revive.kontroler;
 
 import hr.tvz.revive.animacija.AnimacijaTopljenja;
+import hr.tvz.revive.animacija.PlutajucaPoruka;
 import hr.tvz.revive.engine.Bodovanje;
+import hr.tvz.revive.engine.PodatakONagradi;
 import hr.tvz.revive.engine.ReviveEngine;
 import hr.tvz.revive.engine.RezultatPoteza;
 import hr.tvz.revive.model.Igrac;
@@ -14,8 +16,8 @@ import hr.tvz.revive.xml.ReplaySustav;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -26,6 +28,8 @@ public class PomocneAkcijeKontrolera {
 
     private static final String PUTANJA_XML_DNEVNIKA = "revive-log.xml";
     private static final String PUTANJA_REPLAY_FXML = "/hr/tvz/revive/replay-ekran.fxml";
+    private static final String PUTANJA_KATALOG_FXML = "/hr/tvz/revive/katalog-ekran.fxml";
+    private static final String PUTANJA_KRAJ_IGRE_FXML = "/hr/tvz/revive/kraj-igre-ekran.fxml";
 
     public void spremiIgru(ReviveEngine reviveEngine, Label labelaPorukaPoteza) {
         StanjeIgre stanjeIgre = new StanjeIgre(reviveEngine.getIgraci(), reviveEngine.getPermafrostPloca(),
@@ -53,8 +57,21 @@ public class PomocneAkcijeKontrolera {
     }
 
     public void prikaziKatalogRadnika() {
-        KatalogRadnikaGenerator katalogRadnikaGenerator = new KatalogRadnikaGenerator();
-        prikaziProzorInformacije("Reflection katalog", "Dinamicka analiza modela igre", katalogRadnikaGenerator.generirajKatalog());
+        try {
+            KatalogRadnikaGenerator katalogRadnikaGenerator = new KatalogRadnikaGenerator();
+            FXMLLoader ucitavacFxml = new FXMLLoader(getClass().getResource(PUTANJA_KATALOG_FXML));
+            Parent korijenskiElement = ucitavacFxml.load();
+
+            KontrolerKatalog kontrolerKatalog = ucitavacFxml.getController();
+            kontrolerKatalog.postaviTekst(katalogRadnikaGenerator.generirajKatalog());
+
+            Stage prozorKataloga = new Stage();
+            prozorKataloga.setTitle("Reflection katalog");
+            prozorKataloga.setScene(new Scene(korijenskiElement));
+            prozorKataloga.show();
+        } catch (IOException iznimka) {
+            System.out.println("Greska prilikom otvaranja kataloga: " + iznimka.getMessage());
+        }
     }
 
     public void prikaziReplay() {
@@ -77,12 +94,35 @@ public class PomocneAkcijeKontrolera {
         }
     }
 
-    public void prikaziKrajIgre(ReviveEngine reviveEngine, Label labelaKrajIgre) {
-        Bodovanje bodovanje = new Bodovanje();
-        Igrac pobjednik = bodovanje.pronadjiPobjednika(reviveEngine.getIgraci());
+    public void prikaziKrajIgre(ReviveEngine reviveEngine, Runnable akcijaIgrajPonovno) {
+        try {
+            Bodovanje bodovanje = new Bodovanje();
+            Igrac pobjednik = bodovanje.pronadjiPobjednika(reviveEngine.getIgraci());
+            String tekstRezultata = formatirajRezultate(reviveEngine.getIgraci());
 
-        labelaKrajIgre.setText("Igra zavrsena!\nPobjednik: " + pobjednik.getImeIgraca()
-                + " (" + pobjednik.izracunajUkupneBodoveNaKraju() + " bodova)");
+            FXMLLoader ucitavacFxml = new FXMLLoader(getClass().getResource(PUTANJA_KRAJ_IGRE_FXML));
+            Parent korijenskiElement = ucitavacFxml.load();
+
+            KontrolerKrajIgre kontrolerKrajIgre = ucitavacFxml.getController();
+            kontrolerKrajIgre.postaviPodatke("Pobjednik: " + pobjednik.getImeIgraca(), tekstRezultata,
+                    akcijaIgrajPonovno, this::prikaziReplay);
+
+            Stage prozorKrajaIgre = new Stage();
+            prozorKrajaIgre.setTitle("Igra zavrsena");
+            prozorKrajaIgre.setScene(new Scene(korijenskiElement));
+            prozorKrajaIgre.show();
+        } catch (IOException iznimka) {
+            System.out.println("Greska prilikom otvaranja ekrana kraja igre: " + iznimka.getMessage());
+        }
+    }
+
+    private String formatirajRezultate(List<Igrac> igraci) {
+        StringBuilder tekst = new StringBuilder();
+        for (Igrac igrac : igraci) {
+            tekst.append(igrac.getImeIgraca()).append(": ")
+                    .append(igrac.izracunajUkupneBodoveNaKraju()).append(" bodova\n");
+        }
+        return tekst.toString();
     }
 
     public void pokreniAnimacijuPostavljanja(RezultatPoteza rezultatPoteza, Rectangle[][] pravokutnici) {
@@ -95,11 +135,12 @@ public class PomocneAkcijeKontrolera {
         new AnimacijaTopljenja().pokreniAnimacijuNaPolju(pravokutnik, bojaVlasnika);
     }
 
-    private void prikaziProzorInformacije(String naslov, String zaglavlje, String sadrzaj) {
-        Alert prozorInformacije = new Alert(Alert.AlertType.INFORMATION);
-        prozorInformacije.setTitle(naslov);
-        prozorInformacije.setHeaderText(zaglavlje);
-        prozorInformacije.setContentText(sadrzaj);
-        prozorInformacije.showAndWait();
+    public void prikaziPlutajucePoruke(List<PodatakONagradi> nagrade, Pane slojPoruka, Rectangle[][] pravokutnici) {
+        PlutajucaPoruka plutajucaPoruka = new PlutajucaPoruka();
+        for (PodatakONagradi nagrada : nagrade) {
+            Rectangle pravokutnik = pravokutnici[nagrada.getRedak()][nagrada.getStupac()];
+            plutajucaPoruka.prikaziPoruku(slojPoruka, nagrada.getTekstNagrade(),
+                    pravokutnik.getX(), pravokutnik.getY() - 20);
+        }
     }
 }

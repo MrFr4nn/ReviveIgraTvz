@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="hr.tvz.revive.kontroler.KontrolerKrajIgre"
+            prefHeight="420.0" prefWidth="520.0"
+            style="-fx-background-color: #1f2d3d;">
+
+    <center>
+        <VBox spacing="18" alignment="CENTER" style="-fx-padding: 30;">
+            <Label text="IGRA ZAVRSENA" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Label fx:id="labelaPobjednik" text="" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2ecc71;"/>
+            <Label fx:id="labelaRezultati" text="" wrapText="true" style="-fx-font-size: 14px; -fx-text-fill: #ecf0f1;"/>
+
+            <HBox spacing="12" alignment="CENTER">
+                <Button fx:id="gumbIgrajPonovno" text="Igraj ponovno" onAction="#igrajPonovno" prefWidth="150" prefHeight="36"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                <Button fx:id="gumbPrikaziReplay" text="Prikazi replay" onAction="#prikaziReplay" prefWidth="150" prefHeight="36"/>
+            </HBox>
+            <Button text="Zatvori" onAction="#zatvoriProzor" prefWidth="120" prefHeight="32"/>
+        </VBox>
+    </center>
+
+</BorderPane>

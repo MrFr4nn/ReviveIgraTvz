@@ -1,6 +1,7 @@
 package hr.tvz.revive.kontroler;
 
 import hr.tvz.revive.async.AsinkroniZadaci;
+import hr.tvz.revive.engine.PodatakONagradi;
 import hr.tvz.revive.engine.ReviveEngine;
 import hr.tvz.revive.engine.RezultatPoteza;
 import hr.tvz.revive.model.Karta;
@@ -9,44 +10,44 @@ import hr.tvz.revive.xml.ZapisPoteza;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-
+import java.util.List;
 
 public class GlavniKontroler {
 
     @FXML
     private Label labelaTrenutniIgrac;
-
     @FXML
     private Label labelaRunda;
-
     @FXML
     private Label labelaPorukaPoteza;
-
     @FXML
     private Label labelaStanjeIgrac1;
-
     @FXML
     private Label labelaStanjeIgrac2;
-
     @FXML
     private Label labelaOdabranaAkcija;
-
-    @FXML
-    private Label labelaKrajIgre;
-
     @FXML
     private ListView<String> listaKarataIgrac1;
-
     @FXML
     private ListView<String> listaKarataIgrac2;
-
     @FXML
     private GridPane mrezaPermafrosta;
-
+    @FXML
+    private Pane slojPoruka;
+    @FXML
+    private Button gumbExplorer;
+    @FXML
+    private Button gumbBuilder;
+    @FXML
+    private Button gumbScholar;
+    @FXML
+    private Button gumbScientist;
     private ReviveEngine reviveEngine;
     private ZapisPoteza zapisPoteza;
     private AzuriranjeSucelja azuriranjeSucelja;
@@ -69,7 +70,6 @@ public class GlavniKontroler {
         reviveEngine.pokreniNovuIgru("Igrac 1", "Igrac 2");
         zapisPoteza.zapocniZapis();
         odabraniTipRadnika = null;
-        labelaKrajIgre.setText("");
         labelaPorukaPoteza.setText("");
         azurirajSucelje();
     }
@@ -83,32 +83,29 @@ public class GlavniKontroler {
             return;
         }
         Karta odabranaKarta = reviveEngine.getIgracNaPotezu().getRukaKarata().get(indeks);
-        RezultatPoteza rezultatPoteza = reviveEngine.odigrajKartu(odabranaKarta);
-        obradiRezultat(rezultatPoteza);
+        obradiRezultat(reviveEngine.odigrajKartu(odabranaKarta));
     }
 
     @FXML
     private void odaberiExplorer() {
-        odabraniTipRadnika = TipRadnika.EXPLORER;
-        labelaOdabranaAkcija.setText("Explorer odabran - klikni slobodno polje na ploci.");
+        postaviOdabraniTip(TipRadnika.EXPLORER);
     }
-
     @FXML
     private void odaberiBuilder() {
-        odabraniTipRadnika = TipRadnika.BUILDER;
-        labelaOdabranaAkcija.setText("Builder odabran - klikni slobodno polje na ploci.");
+        postaviOdabraniTip(TipRadnika.BUILDER);
     }
-
     @FXML
     private void odaberiScholar() {
-        odabraniTipRadnika = TipRadnika.SCHOLAR;
-        labelaOdabranaAkcija.setText("Scholar odabran - klikni slobodno polje na ploci.");
+        postaviOdabraniTip(TipRadnika.SCHOLAR);
     }
-
     @FXML
     private void odaberiScientist() {
-        odabraniTipRadnika = TipRadnika.SCIENTIST;
-        labelaOdabranaAkcija.setText("Scientist odabran - klikni slobodno polje na ploci.");
+        postaviOdabraniTip(TipRadnika.SCIENTIST);
+    }
+
+    private void postaviOdabraniTip(TipRadnika tip) {
+        odabraniTipRadnika = tip;
+        labelaOdabranaAkcija.setText(tip + " odabran - klikni slobodno polje na ploci.");
     }
 
     private void kliknutoPolje(int redak, int stupac) {
@@ -141,10 +138,11 @@ public class GlavniKontroler {
     }
 
     private void zavrsiPotezNaGlavnojNiti() {
-        reviveEngine.zavrsiPotezIPredajSljedecem();
+        List<PodatakONagradi> nagrade = reviveEngine.zavrsiPotezIPredajSljedecem();
+        pomocneAkcijeKontrolera.prikaziPlutajucePoruke(nagrade, slojPoruka, pravokutniciPermafrosta);
         if (reviveEngine.jeIgraZavrsena()) {
             zapisPoteza.zavrsiZapis();
-            pomocneAkcijeKontrolera.prikaziKrajIgre(reviveEngine, labelaKrajIgre);
+            pomocneAkcijeKontrolera.prikaziKrajIgre(reviveEngine, this::pokreniNovuPartiju);
         }
         azurirajSucelje();
     }
@@ -153,29 +151,27 @@ public class GlavniKontroler {
         azuriranjeSucelja.azurirajCijeloSucelje(reviveEngine, labelaTrenutniIgrac, labelaRunda,
                 listaKarataIgrac1, listaKarataIgrac2, labelaStanjeIgrac1, labelaStanjeIgrac2);
         azuriranjeSucelja.azurirajBojePolja(reviveEngine.getPermafrostPloca(), pravokutniciPermafrosta);
+        azuriranjeSucelja.azurirajGumbeRadnika(reviveEngine.getIgracNaPotezu(),
+                gumbExplorer, gumbBuilder, gumbScholar, gumbScientist);
     }
 
     @FXML
     private void spremiIgru() {
         pomocneAkcijeKontrolera.spremiIgru(reviveEngine, labelaPorukaPoteza);
     }
-
     @FXML
     private void ucitajIgru() {
         pomocneAkcijeKontrolera.ucitajIgru(reviveEngine, labelaPorukaPoteza);
         azurirajSucelje();
     }
-
     @FXML
     private void prikaziKatalogRadnika() {
         pomocneAkcijeKontrolera.prikaziKatalogRadnika();
     }
-
     @FXML
     private void prikaziReplay() {
         pomocneAkcijeKontrolera.prikaziReplay();
     }
-
     @FXML
     private void igrajPonovno() {
         pokreniNovuPartiju();

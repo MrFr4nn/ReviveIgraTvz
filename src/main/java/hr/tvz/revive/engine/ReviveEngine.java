@@ -7,18 +7,9 @@ import hr.tvz.revive.model.PoljePermafrosta;
 import hr.tvz.revive.model.Radnik;
 import hr.tvz.revive.model.StanjeIgre;
 import hr.tvz.revive.model.TipRadnika;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Glavni "motor" igre Revive. Svaki igrac ima tocno jednog radnika
- * svakog tipa za CIJELU igru - jednom postavljen na Permafrost polje,
- * radnik ostaje tamo trajno i "radi" na kraju svake sljedece runde
- * (ObradaNagrada dodjeljuje nagradu). Odigravanje karte je odvojena
- * akcija - daje izravan resurs. Hot-seat verzija za 2 igraca na
- * istom racunalu (bez mreze).
- */
 public class ReviveEngine {
 
     public static final int BROJ_RUNDI = 3;
@@ -89,7 +80,7 @@ public class ReviveEngine {
 
         if (!igracNaPotezu.getRukaKarata().contains(odabranaKarta)) {
             rezultatPoteza.setUspjesno(false);
-            rezultatPoteza.setPoruka("Igrač nema tu kartu u ruci.");
+            rezultatPoteza.setPoruka("Igrac nema tu kartu u ruci.");
             return rezultatPoteza;
         }
 
@@ -130,13 +121,13 @@ public class ReviveEngine {
         PoljePermafrosta polje = permafrostPloca.pronadjiPolje(redak, stupac);
         if (polje == null || polje.isZauzeto()) {
             rezultatPoteza.setUspjesno(false);
-            rezultatPoteza.setPoruka("Polje nije slobodno.");
+            rezultatPoteza.setPoruka("To polje nije slobodno.");
             return rezultatPoteza;
         }
 
         if (!platiUlaznuCijenu(igracNaPotezu, tipRadnika)) {
             rezultatPoteza.setUspjesno(false);
-            rezultatPoteza.setPoruka("Nedovoljno resursa za postavljanje radnika.");
+            rezultatPoteza.setPoruka("Nedovoljno resursa za postavljanje tog radnika.");
             return rezultatPoteza;
         }
 
@@ -145,7 +136,7 @@ public class ReviveEngine {
 
         rezultatPoteza.setUspjesno(true);
         rezultatPoteza.setPostavljenoPolje(polje);
-        rezultatPoteza.setPoruka(tipRadnika + " je postavljen i počinje raditi od sljedeće runde.");
+        rezultatPoteza.setPoruka(tipRadnika + " je postavljen i pocinje raditi od sljedece runde.");
         return rezultatPoteza;
     }
 
@@ -164,23 +155,29 @@ public class ReviveEngine {
         }
     }
 
-    public void zavrsiPotezIPredajSljedecem() {
+    public List<PodatakONagradi> zavrsiPotezIPredajSljedecem() {
         indeksIgracaNaPotezu++;
         if (indeksIgracaNaPotezu >= igraci.size()) {
             indeksIgracaNaPotezu = 0;
-            obradiNagradePostavljenihRadnika();
+            List<PodatakONagradi> nagrade = obradiNagradePostavljenihRadnika();
             trenutnaRunda++;
+            return nagrade;
         }
+        return new ArrayList<>();
     }
 
-    private void obradiNagradePostavljenihRadnika() {
-        for (Igrac igrac : igraci) {
+    private List<PodatakONagradi> obradiNagradePostavljenihRadnika() {
+        List<PodatakONagradi> sveNagrade = new ArrayList<>();
+        for (int i = 0; i < igraci.size(); i++) {
+            Igrac igrac = igraci.get(i);
             for (Radnik radnik : igrac.getRadnici()) {
                 if (radnik.isPostavljen()) {
-                    obradaNagrada.dodijeliNagraduRadnika(igrac, radnik, spilKarata);
+                    String tekstNagrade = obradaNagrada.dodijeliNagraduRadnika(igrac, radnik, spilKarata);
+                    sveNagrade.add(new PodatakONagradi(radnik.getRedak(), radnik.getStupac(), tekstNagrade, i));
                 }
             }
         }
+        return sveNagrade;
     }
 
     public boolean jeIgraZavrsena() {

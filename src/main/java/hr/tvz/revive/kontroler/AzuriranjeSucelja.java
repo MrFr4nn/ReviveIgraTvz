@@ -5,19 +5,23 @@ import hr.tvz.revive.model.Igrac;
 import hr.tvz.revive.model.Karta;
 import hr.tvz.revive.model.PermafrostPloca;
 import hr.tvz.revive.model.PoljePermafrosta;
+import hr.tvz.revive.model.Radnik;
+import hr.tvz.revive.model.TipRadnika;
+
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class AzuriranjeSucelja {
 
     private static final int VELICINA_PRAVOKUTNIKA_POLJA = 70;
-    private static final String POLEDJINA_KARTE = "Skrivena karta protivnika";
+    private static final String POLEDJINA_KARTE = "🂠 Skrivena karta";
 
     public Rectangle[][] izgradiPermafrostMrezu(GridPane mrezaPermafrosta) {
         int velicina = PermafrostPloca.VELICINA;
@@ -73,6 +77,9 @@ public class AzuriranjeSucelja {
         boolean prviIgracNaPotezu = reviveEngine.getIndeksIgracaNaPotezu() == 0;
 
         labelaTrenutniIgrac.setText("Na potezu: " + reviveEngine.getIgracNaPotezu().getImeIgraca());
+        labelaTrenutniIgrac.setStyle("-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold; "
+                + "-fx-padding: 4 14; -fx-background-radius: 8; -fx-background-color: "
+                + (prviIgracNaPotezu ? "#2ecc71" : "#3498db") + ";");
         labelaRunda.setText("Runda: " + reviveEngine.getTrenutnaRunda() + " / " + ReviveEngine.BROJ_RUNDI);
 
         azurirajListuKarata(prviIgrac, listaKarataIgrac1, prviIgracNaPotezu);
@@ -80,6 +87,21 @@ public class AzuriranjeSucelja {
 
         labelaStanjeIgrac1.setText(formatirajStanjeIgraca(prviIgrac));
         labelaStanjeIgrac2.setText(formatirajStanjeIgraca(drugiIgrac));
+    }
+
+    public void azurirajGumbeRadnika(Igrac igracNaPotezu, Button gumbExplorer, Button gumbBuilder,
+                                     Button gumbScholar, Button gumbScientist) {
+        azurirajJedanGumb(gumbExplorer, "EXPLORER", "1 kristal", igracNaPotezu, TipRadnika.EXPLORER);
+        azurirajJedanGumb(gumbBuilder, "BUILDER", "2 zupcanika", igracNaPotezu, TipRadnika.BUILDER);
+        azurirajJedanGumb(gumbScholar, "SCHOLAR", "2 hrane", igracNaPotezu, TipRadnika.SCHOLAR);
+        azurirajJedanGumb(gumbScientist, "SCIENTIST", "1 kristal", igracNaPotezu, TipRadnika.SCIENTIST);
+    }
+
+    private void azurirajJedanGumb(Button gumb, String naziv, String cijena, Igrac igrac, TipRadnika tip) {
+        Radnik radnik = igrac.pronadjiNepostavljenogRadnika(tip);
+        boolean dostupan = radnik != null;
+        gumb.setText(naziv + " (" + (dostupan ? "1/1, " + cijena : "0/1 iskoristen") + ")");
+        gumb.setDisable(!dostupan);
     }
 
     private void azurirajListuKarata(Igrac igrac, ListView<String> listaKarata, boolean prikaziPuniNaziv) {
