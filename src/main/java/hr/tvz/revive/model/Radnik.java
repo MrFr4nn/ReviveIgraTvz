@@ -1,4 +1,5 @@
 package hr.tvz.revive.model;
+
 import java.io.Serializable;
 
 public class Radnik implements Serializable {
@@ -7,10 +8,14 @@ public class Radnik implements Serializable {
 
     private TipRadnika tip;
     private boolean postavljen;
+    private int redak;
+    private int stupac;
 
     public Radnik(TipRadnika tip) {
         this.tip = tip;
         this.postavljen = false;
+        this.redak = -1;
+        this.stupac = -1;
     }
 
     public TipRadnika getTip() {
@@ -21,11 +26,17 @@ public class Radnik implements Serializable {
         return postavljen;
     }
 
-    public void postavi() {
-        this.postavljen = true;
+    public int getRedak() {
+        return redak;
     }
 
-    public void resetiraj() {
-        this.postavljen = false;
+    public int getStupac() {
+        return stupac;
+    }
+
+    public void postaviNaPolje(int redak, int stupac) {
+        this.postavljen = true;
+        this.redak = redak;
+        this.stupac = stupac;
     }
 }

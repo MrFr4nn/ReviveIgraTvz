@@ -16,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -63,6 +64,7 @@ public class PomocneAkcijeKontrolera {
 
             FXMLLoader ucitavacFxml = new FXMLLoader(getClass().getResource(PUTANJA_REPLAY_FXML));
             Parent korijenskiElement = ucitavacFxml.load();
+
             KontrolerReplay kontrolerReplay = ucitavacFxml.getController();
             kontrolerReplay.postaviPoteze(svilPotezi);
 
@@ -83,13 +85,14 @@ public class PomocneAkcijeKontrolera {
                 + " (" + pobjednik.izracunajUkupneBodoveNaKraju() + " bodova)");
     }
 
-    public void pokreniAnimacijuAkoJePoljeOtopljeno(RezultatPoteza rezultatPoteza, Rectangle[][] pravokutnici) {
-        PoljePermafrosta otopljenoPolje = rezultatPoteza.getOtopljenoPolje();
-        if (otopljenoPolje == null) {
+    public void pokreniAnimacijuPostavljanja(RezultatPoteza rezultatPoteza, Rectangle[][] pravokutnici) {
+        PoljePermafrosta postavljenoPolje = rezultatPoteza.getPostavljenoPolje();
+        if (postavljenoPolje == null) {
             return;
         }
-        Rectangle pravokutnikZaAnimaciju = pravokutnici[otopljenoPolje.getRedak()][otopljenoPolje.getStupac()];
-        new AnimacijaTopljenja().pokreniAnimacijuNaPolju(pravokutnikZaAnimaciju);
+        Rectangle pravokutnik = pravokutnici[postavljenoPolje.getRedak()][postavljenoPolje.getStupac()];
+        Color bojaVlasnika = postavljenoPolje.getIndeksVlasnika() == 0 ? Color.SEAGREEN : Color.DODGERBLUE;
+        new AnimacijaTopljenja().pokreniAnimacijuNaPolju(pravokutnik, bojaVlasnika);
     }
 
     private void prikaziProzorInformacije(String naslov, String zaglavlje, String sadrzaj) {

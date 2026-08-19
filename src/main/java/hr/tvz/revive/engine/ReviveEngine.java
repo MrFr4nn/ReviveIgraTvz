@@ -2,44 +2,56 @@ package hr.tvz.revive.engine;
 
 import hr.tvz.revive.model.Igrac;
 import hr.tvz.revive.model.Karta;
-import hr.tvz.revive.model.Masina;
 import hr.tvz.revive.model.PermafrostPloca;
 import hr.tvz.revive.model.PoljePermafrosta;
 import hr.tvz.revive.model.Radnik;
 import hr.tvz.revive.model.StanjeIgre;
 import hr.tvz.revive.model.TipRadnika;
-import hr.tvz.revive.model.VrstaNagradePermafrosta;
+
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Glavni "motor" igre Revive. Svaki igrac ima tocno jednog radnika
+ * svakog tipa za CIJELU igru - jednom postavljen na Permafrost polje,
+ * radnik ostaje tamo trajno i "radi" na kraju svake sljedece runde
+ * (ObradaNagrada dodjeljuje nagradu). Odigravanje karte je odvojena
+ * akcija - daje izravan resurs. Hot-seat verzija za 2 igraca na
+ * istom racunalu (bez mreze).
+ */
 public class ReviveEngine {
 
     public static final int BROJ_RUNDI = 3;
-    public static final int MAKSIMALNI_BROJ_IGRACA = 2;
-    private static final int CIJENA_KRISTALA_ZA_EXPLORER = 1;
+    private static final int CIJENA_EXPLORER = 1;
+    private static final int CIJENA_BUILDER = 2;
+    private static final int CIJENA_SCHOLAR = 2;
+    private static final int CIJENA_SCIENTIST = 1;
 
     private List<Igrac> igraci;
     private PermafrostPloca permafrostPloca;
     private List<Karta> spilKarata;
     private int trenutnaRunda;
     private int indeksIgracaNaPotezu;
+    private ObradaNagrada obradaNagrada;
 
     public ReviveEngine() {
         this.igraci = new ArrayList<>();
         this.permafrostPloca = new PermafrostPloca();
         this.trenutnaRunda = 1;
         this.indeksIgracaNaPotezu = 0;
+        this.obradaNagrada = new ObradaNagrada();
     }
+
     public void pokreniNovuIgru(String imePrvogIgraca, String imeDrugogIgraca) {
         igraci.clear();
         igraci.add(new Igrac(imePrvogIgraca));
         igraci.add(new Igrac(imeDrugogIgraca));
         permafrostPloca = new PermafrostPloca();
+
         GeneratorKarata generatorKarata = new GeneratorKarata();
         spilKarata = generatorKarata.generirajSpil();
-
         for (Igrac igrac : igraci) {
-            igrac.getRukaKarata().addAll(generatorKarata.podijeliPocetnuRuku(spilKarata, 3));
+            igrac.getRukaKarata().addAll(generatorKarata.izvuciKarte(spilKarata, 1));
         }
         trenutnaRunda = 1;
         indeksIgracaNaPotezu = 0;
@@ -71,120 +83,106 @@ public class ReviveEngine {
         return indeksIgracaNaPotezu;
     }
 
-    public RezultatPoteza izvrsiPotez(Karta odabranaKarta, TipRadnika tipRadnika) {
-        return izvrsiPotez(odabranaKarta, tipRadnika, -1, -1);
-    }
-    /** Izvrsava potez: karta odredjuje efekt, radnik izvodi akciju. redakPolja/stupacPolja samo za EXPLORER. */
-    public RezultatPoteza izvrsiPotez(Karta odabranaKarta, TipRadnika tipRadnika, int redakPolja, int stupacPolja) {
+    public RezultatPoteza odigrajKartu(Karta odabranaKarta) {
         Igrac igracNaPotezu = getIgracNaPotezu();
         RezultatPoteza rezultatPoteza = new RezultatPoteza();
-        String greskaValidacije = validirajPotez(igracNaPotezu, odabranaKarta, tipRadnika);
 
-        if (greskaValidacije != null) {
+        if (!igracNaPotezu.getRukaKarata().contains(odabranaKarta)) {
             rezultatPoteza.setUspjesno(false);
-            rezultatPoteza.setPoruka(greskaValidacije);
+            rezultatPoteza.setPoruka("Igrač nema tu kartu u ruci.");
             return rezultatPoteza;
         }
 
-        Radnik slobodniRadnik = igracNaPotezu.pronadjiSlobodnogRadnika(tipRadnika);
-        primijeniEfektKarte(igracNaPotezu, odabranaKarta);
-        igracNaPotezu.getRukaKarata().remove(odabranaKarta);
-        primijeniEfektRadnika(igracNaPotezu, slobodniRadnik, rezultatPoteza, redakPolja, stupacPolja);
-
-        rezultatPoteza.setUspjesno(true);
-        rezultatPoteza.setPoruka("Potez uspjesno odigran.");
-        return rezultatPoteza;
-    }
-    private String validirajPotez(Igrac igracNaPotezu, Karta odabranaKarta, TipRadnika tipRadnika) {
-        if (!igracNaPotezu.getRukaKarata().contains(odabranaKarta)) {
-            return "Igrac nema tu kartu u ruci.";
-        }
-        if (odabranaKarta.getTipAkcije().getPovezaniTipRadnika() != tipRadnika) {
-            return "Ta karta ne odgovara odabranom tipu radnika.";
-        }
-        if (igracNaPotezu.pronadjiSlobodnogRadnika(tipRadnika) == null) {
-            return "Nema slobodnog radnika tog tipa.";
-        }
-        return null;
-    }
-    private void primijeniEfektKarte(Igrac igrac, Karta karta) {
-        switch (karta.getTipAkcije()) {
+        switch (odabranaKarta.getTipAkcije()) {
             case DAJ_HRANU:
-                igrac.dodajHranu(karta.getVrijednost());
+                igracNaPotezu.dodajHranu(odabranaKarta.getVrijednost());
                 break;
             case DAJ_ZUPCANIKE:
-                igrac.dodajZupcanike(karta.getVrijednost());
-                break;
-            case DAJ_BODOVE:
-                igrac.dodajBodove(karta.getVrijednost());
+                igracNaPotezu.dodajZupcanike(odabranaKarta.getVrijednost());
                 break;
             case DAJ_KRISTAL:
-                igrac.dodajKristale(karta.getVrijednost());
+                igracNaPotezu.dodajKristale(odabranaKarta.getVrijednost());
+                break;
+            case DAJ_BODOVE:
+                igracNaPotezu.dodajBodove(odabranaKarta.getVrijednost());
                 break;
             default:
                 break;
         }
+        igracNaPotezu.getRukaKarata().remove(odabranaKarta);
+
+        rezultatPoteza.setUspjesno(true);
+        rezultatPoteza.setPoruka("Odigrana karta: " + odabranaKarta.getNaziv() + ".");
+        return rezultatPoteza;
     }
 
-    private void primijeniEfektRadnika(Igrac igrac, Radnik radnik, RezultatPoteza rezultatPoteza,
-                                       int redakPolja, int stupacPolja) {
-        radnik.postavi();
-        if (radnik.getTip() == TipRadnika.EXPLORER) {
-            izvrsiAkcijuExplorer(igrac, rezultatPoteza, redakPolja, stupacPolja);
-        } else if (radnik.getTip() == TipRadnika.BUILDER) {
-            izvrsiAkcijuBuilder(igrac, rezultatPoteza);
-        } else if (radnik.getTip() == TipRadnika.SCHOLAR) {
-            izvrsiAkcijuScholar(igrac, rezultatPoteza);
-        } else if (radnik.getTip() == TipRadnika.SCIENTIST) {
-            izvrsiAkcijuScientist(igrac, rezultatPoteza);
+    public RezultatPoteza postaviRadnika(TipRadnika tipRadnika, int redak, int stupac) {
+        Igrac igracNaPotezu = getIgracNaPotezu();
+        RezultatPoteza rezultatPoteza = new RezultatPoteza();
+
+        Radnik radnik = igracNaPotezu.pronadjiNepostavljenogRadnika(tipRadnika);
+        if (radnik == null) {
+            rezultatPoteza.setUspjesno(false);
+            rezultatPoteza.setPoruka("Vec si postavio tog radnika.");
+            return rezultatPoteza;
         }
-    }
-    private void izvrsiAkcijuExplorer(Igrac igrac, RezultatPoteza rezultatPoteza, int redakPolja, int stupacPolja) {
-        if (!igrac.potrosiKristale(CIJENA_KRISTALA_ZA_EXPLORER)) {
-            rezultatPoteza.setPoruka("Nedovoljno kristala za istrazivanje (potreban 1 kristal).");
-            return;
+
+        PoljePermafrosta polje = permafrostPloca.pronadjiPolje(redak, stupac);
+        if (polje == null || polje.isZauzeto()) {
+            rezultatPoteza.setUspjesno(false);
+            rezultatPoteza.setPoruka("Polje nije slobodno.");
+            return rezultatPoteza;
         }
-        PoljePermafrosta poljeZaTopljenje = permafrostPloca.pronadjiPoljeZaOtapanje(redakPolja, stupacPolja);
-        if (poljeZaTopljenje == null) {
-            igrac.dodajKristale(CIJENA_KRISTALA_ZA_EXPLORER);
-            rezultatPoteza.setPoruka("Odabrano polje ne postoji ili je vec otopljeno.");
-            return;
+
+        if (!platiUlaznuCijenu(igracNaPotezu, tipRadnika)) {
+            rezultatPoteza.setUspjesno(false);
+            rezultatPoteza.setPoruka("Nedovoljno resursa za postavljanje radnika.");
+            return rezultatPoteza;
         }
-        VrstaNagradePermafrosta vrstaNagrade = poljeZaTopljenje.getVrstaNagrade();
-        poljeZaTopljenje.otopiIPrimijeniNagradu(igrac);
-        rezultatPoteza.setOtopljenoPolje(poljeZaTopljenje);
-        rezultatPoteza.setPoruka("Explorer je otopio polje i osvojio nagradu: " + vrstaNagrade + ".");
+
+        radnik.postaviNaPolje(redak, stupac);
+        polje.zauzmi(indeksIgracaNaPotezu, tipRadnika);
+
+        rezultatPoteza.setUspjesno(true);
+        rezultatPoteza.setPostavljenoPolje(polje);
+        rezultatPoteza.setPoruka(tipRadnika + " je postavljen i počinje raditi od sljedeće runde.");
+        return rezultatPoteza;
     }
-    private void izvrsiAkcijuBuilder(Igrac igrac, RezultatPoteza rezultatPoteza) {
-        if (!igrac.potrosiZupcanike(Masina.CIJENA_ZUPCANIKA)) {
-            rezultatPoteza.setPoruka("Nedovoljno zupcanika za gradnju Masine.");
-            return;
+
+    private boolean platiUlaznuCijenu(Igrac igrac, TipRadnika tipRadnika) {
+        switch (tipRadnika) {
+            case EXPLORER:
+                return igrac.potrosiKristale(CIJENA_EXPLORER);
+            case BUILDER:
+                return igrac.potrosiZupcanike(CIJENA_BUILDER);
+            case SCHOLAR:
+                return igrac.potrosiHranu(CIJENA_SCHOLAR);
+            case SCIENTIST:
+                return igrac.potrosiKristale(CIJENA_SCIENTIST);
+            default:
+                return false;
         }
-        Masina novaMasina = new Masina("Masina " + (igrac.getIzgradjeneMasine().size() + 1));
-        igrac.getIzgradjeneMasine().add(novaMasina);
-        rezultatPoteza.setPoruka("Builder izgradio Masinu (ukupno: " + igrac.getIzgradjeneMasine().size() + ").");
-    }
-    private void izvrsiAkcijuScholar(Igrac igrac, RezultatPoteza rezultatPoteza) {
-        igrac.dodajNaucenZapis();
-        igrac.dodajBodove(2);
-        rezultatPoteza.setPoruka("Scholar naucio Zapis (ukupno: " + igrac.getBrojNaucenihZapisa() + "), +2 boda.");
-    }
-    private void izvrsiAkcijuScientist(Igrac igrac, RezultatPoteza rezultatPoteza) {
-        igrac.dodajIzucenEksperiment();
-        igrac.dodajBodove(2);
-        rezultatPoteza.setPoruka("Scientist izucio Eksperiment (ukupno: " + igrac.getBrojIzucenihEksperimenata() + "), +2 boda.");
     }
 
     public void zavrsiPotezIPredajSljedecem() {
         indeksIgracaNaPotezu++;
         if (indeksIgracaNaPotezu >= igraci.size()) {
             indeksIgracaNaPotezu = 0;
+            obradiNagradePostavljenihRadnika();
             trenutnaRunda++;
-            for (Igrac igrac : igraci) {
-                igrac.resetirajRadnike();
+        }
+    }
+
+    private void obradiNagradePostavljenihRadnika() {
+        for (Igrac igrac : igraci) {
+            for (Radnik radnik : igrac.getRadnici()) {
+                if (radnik.isPostavljen()) {
+                    obradaNagrada.dodijeliNagraduRadnika(igrac, radnik, spilKarata);
+                }
             }
         }
     }
+
     public boolean jeIgraZavrsena() {
         return trenutnaRunda > BROJ_RUNDI;
     }

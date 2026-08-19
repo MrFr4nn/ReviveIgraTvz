@@ -26,62 +26,64 @@
 
     <left>
         <VBox spacing="10" prefWidth="270" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #dcdfe3; -fx-border-width: 0 2 0 0;">
-            <Label text="IGRAC 1" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+            <Label text="IGRAC 1 (zeleni)" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2e8b57;"/>
             <Label fx:id="labelaStanjeIgrac1" text="-" wrapText="true" style="-fx-font-size: 12px;"/>
             <Separator/>
             <Label text="Ruka karata" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
-            <ListView fx:id="listaKarataIgrac1" prefHeight="220" style="-fx-font-size: 11px;"/>
+            <ListView fx:id="listaKarataIgrac1" prefHeight="200" style="-fx-font-size: 11px;"/>
         </VBox>
     </left>
 
     <right>
         <VBox spacing="10" prefWidth="270" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #dcdfe3; -fx-border-width: 0 0 0 2;">
-            <Label text="IGRAC 2" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #c0392b;"/>
+            <Label text="IGRAC 2 (plavi)" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1e90ff;"/>
             <Label fx:id="labelaStanjeIgrac2" text="-" wrapText="true" style="-fx-font-size: 12px;"/>
             <Separator/>
             <Label text="Ruka karata" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
-            <ListView fx:id="listaKarataIgrac2" prefHeight="220" style="-fx-font-size: 11px;"/>
+            <ListView fx:id="listaKarataIgrac2" prefHeight="200" style="-fx-font-size: 11px;"/>
         </VBox>
     </right>
 
     <center>
-        <VBox spacing="16" alignment="TOP_CENTER" style="-fx-padding: 18 30 18 30;">
+        <VBox spacing="14" alignment="TOP_CENTER" style="-fx-padding: 16 30 16 30;">
 
             <VBox spacing="6" alignment="CENTER">
                 <Label text="Permafrost ploca" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
-                <Label text="Kristal karta = Explorer: klikni polje da ga otopis" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
+                <Label text="Zeleno = Igrac 1, Plavo = Igrac 2, Sivo = slobodno" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
                 <GridPane fx:id="mrezaPermafrosta" hgap="10" vgap="10" alignment="CENTER"/>
             </VBox>
 
             <Separator prefWidth="500"/>
 
-            <Label text="Klikni kartu u svojoj ruci, zatim odgovarajuceg radnika" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
-            <Label fx:id="labelaOdabranaAkcija" text="Odaberi kartu iz ruke." wrapText="true" maxWidth="500"
-                   style="-fx-font-size: 13px; -fx-text-fill: #2980b9; -fx-font-weight: bold;"/>
+            <Button fx:id="gumbOdigrajKartu" text="Odigraj odabranu kartu" onAction="#odigrajOdabranuKartu" prefWidth="260" prefHeight="38"
+                    style="-fx-background-color: #1f2d3d; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+
+            <Label text="ILI postavi radnika na ploci (plati ulaznu cijenu):" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
 
             <GridPane hgap="10" vgap="10" alignment="CENTER">
-                <Button fx:id="gumbExplorer" text="EXPLORER" onAction="#odaberiExplorer" prefWidth="180" prefHeight="42"
+                <Button fx:id="gumbExplorer" text="EXPLORER (1 kristal)" onAction="#odaberiExplorer" prefWidth="180" prefHeight="42"
                         style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;"
                         GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <Button fx:id="gumbBuilder" text="BUILDER" onAction="#odaberiOstaloRadnika" prefWidth="180" prefHeight="42"
+                <Button fx:id="gumbBuilder" text="BUILDER (2 zupcanika)" onAction="#odaberiBuilder" prefWidth="180" prefHeight="42"
                         style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-weight: bold;"
                         GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                <Button fx:id="gumbScholar" text="SCHOLAR" onAction="#odaberiOstaloRadnika" prefWidth="180" prefHeight="42"
+                <Button fx:id="gumbScholar" text="SCHOLAR (2 hrane)" onAction="#odaberiScholar" prefWidth="180" prefHeight="42"
                         style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold;"
                         GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <Button fx:id="gumbScientist" text="SCIENTIST" onAction="#odaberiOstaloRadnika" prefWidth="180" prefHeight="42"
+                <Button fx:id="gumbScientist" text="SCIENTIST (1 kristal)" onAction="#odaberiScientist" prefWidth="180" prefHeight="42"
                         style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"
                         GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             </GridPane>
 
+            <Label fx:id="labelaOdabranaAkcija" text="" wrapText="true" maxWidth="500"
+                   style="-fx-font-size: 12px; -fx-text-fill: #2980b9; -fx-font-weight: bold;"/>
             <Label fx:id="labelaPorukaPoteza" text="" wrapText="true" maxWidth="500"
                    style="-fx-font-size: 12px; -fx-text-fill: #c0392b; -fx-font-weight: bold;"/>
-
             <Label fx:id="labelaKrajIgre" text="" wrapText="true" maxWidth="600"
                    style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
 
             <Button fx:id="gumbIgrajPonovno" text="Igraj ponovno" onAction="#igrajPonovno" prefWidth="200" prefHeight="34"
-                    style="-fx-background-color: #1f2d3d; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold;"/>
 
         </VBox>
     </center>

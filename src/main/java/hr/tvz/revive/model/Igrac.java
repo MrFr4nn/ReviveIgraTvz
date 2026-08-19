@@ -8,7 +8,7 @@ public class Igrac implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static final int MAKSIMALNI_RESURS = 6;
+    public static final int MAKSIMALNI_RESURS = 9;
 
     private String imeIgraca;
     private List<Karta> rukaKarata;
@@ -18,8 +18,6 @@ public class Igrac implements Serializable {
     private int zupcanici;
     private int kristali;
     private int bodovi;
-    private int brojNaucenihZapisa;
-    private int brojIzucenihEksperimenata;
 
     public Igrac(String imeIgraca) {
         this.imeIgraca = imeIgraca;
@@ -28,10 +26,8 @@ public class Igrac implements Serializable {
         this.izgradjeneMasine = new ArrayList<>();
         this.hrana = 2;
         this.zupcanici = 2;
-        this.kristali = 0;
+        this.kristali = 1;
         this.bodovi = 0;
-        this.brojNaucenihZapisa = 0;
-        this.brojIzucenihEksperimenata = 0;
 
         radnici.add(new Radnik(TipRadnika.EXPLORER));
         radnici.add(new Radnik(TipRadnika.BUILDER));
@@ -71,14 +67,6 @@ public class Igrac implements Serializable {
         return bodovi;
     }
 
-    public int getBrojNaucenihZapisa() {
-        return brojNaucenihZapisa;
-    }
-
-    public int getBrojIzucenihEksperimenata() {
-        return brojIzucenihEksperimenata;
-    }
-
     public void dodajHranu(int kolicina) {
         hrana = Math.min(hrana + kolicina, MAKSIMALNI_RESURS);
     }
@@ -93,14 +81,6 @@ public class Igrac implements Serializable {
 
     public void dodajBodove(int kolicina) {
         bodovi = bodovi + kolicina;
-    }
-
-    public void dodajNaucenZapis() {
-        brojNaucenihZapisa = brojNaucenihZapisa + 1;
-    }
-
-    public void dodajIzucenEksperiment() {
-        brojIzucenihEksperimenata = brojIzucenihEksperimenata + 1;
     }
 
     public boolean potrosiZupcanike(int kolicina) {
@@ -127,19 +107,13 @@ public class Igrac implements Serializable {
         return true;
     }
 
-    public Radnik pronadjiSlobodnogRadnika(TipRadnika tip) {
+    public Radnik pronadjiNepostavljenogRadnika(TipRadnika tip) {
         for (Radnik radnik : radnici) {
             if (radnik.getTip() == tip && !radnik.isPostavljen()) {
                 return radnik;
             }
         }
         return null;
-    }
-
-    public void resetirajRadnike() {
-        for (Radnik radnik : radnici) {
-            radnik.resetiraj();
-        }
     }
 
     public int izracunajUkupneBodoveNaKraju() {

@@ -4,8 +4,7 @@ import hr.tvz.revive.engine.ReviveEngine;
 import hr.tvz.revive.model.Igrac;
 import hr.tvz.revive.model.Karta;
 import hr.tvz.revive.model.PermafrostPloca;
-import hr.tvz.revive.model.TipRadnika;
-import javafx.scene.control.Button;
+import hr.tvz.revive.model.PoljePermafrosta;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
@@ -14,43 +13,54 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class AzuriranjeSucelja {
 
     private static final int VELICINA_PRAVOKUTNIKA_POLJA = 70;
-    private static final String POLEDJINA_KARTE = "Okrenuta karta";
+    private static final String POLEDJINA_KARTE = "Skrivena karta protivnika";
 
     public Rectangle[][] izgradiPermafrostMrezu(GridPane mrezaPermafrosta) {
         int velicina = PermafrostPloca.VELICINA;
-        Rectangle[][] pravokutniciPermafrosta = new Rectangle[velicina][velicina];
+        Rectangle[][] pravokutnici = new Rectangle[velicina][velicina];
 
         for (int redak = 0; redak < velicina; redak++) {
             for (int stupac = 0; stupac < velicina; stupac++) {
-                Rectangle pravokutnikPolja =
-                        new Rectangle(VELICINA_PRAVOKUTNIKA_POLJA, VELICINA_PRAVOKUTNIKA_POLJA);
-                pravokutnikPolja.setFill(Color.DODGERBLUE);
+                Rectangle pravokutnikPolja = new Rectangle(VELICINA_PRAVOKUTNIKA_POLJA, VELICINA_PRAVOKUTNIKA_POLJA);
+                pravokutnikPolja.setFill(Color.LIGHTGRAY);
                 pravokutnikPolja.setArcWidth(12);
                 pravokutnikPolja.setArcHeight(12);
-                pravokutniciPermafrosta[redak][stupac] = pravokutnikPolja;
+                pravokutnici[redak][stupac] = pravokutnikPolja;
                 mrezaPermafrosta.add(pravokutnikPolja, stupac, redak);
             }
         }
-
-        return pravokutniciPermafrosta;
+        return pravokutnici;
     }
 
     public void postaviKlikoveNaPolja(Rectangle[][] pravokutnici, KlikNaPolje klikNaPolje) {
         for (int redak = 0; redak < pravokutnici.length; redak++) {
             for (int stupac = 0; stupac < pravokutnici[redak].length; stupac++) {
-                int redakZaKlik = redak;
-                int stupacZaKlik = stupac;
-                pravokutnici[redak][stupac].setOnMouseClicked(
-                        dogadjaj -> klikNaPolje.obradiKlik(redakZaKlik, stupacZaKlik));
+                int r = redak;
+                int s = stupac;
+                pravokutnici[redak][stupac].setOnMouseClicked(dogadjaj -> klikNaPolje.obradiKlik(r, s));
             }
         }
     }
 
     public interface KlikNaPolje {
         void obradiKlik(int redak, int stupac);
+    }
+
+    public void azurirajBojePolja(PermafrostPloca ploca, Rectangle[][] pravokutnici) {
+        for (PoljePermafrosta polje : ploca.getPolja()) {
+            Rectangle pravokutnik = pravokutnici[polje.getRedak()][polje.getStupac()];
+            if (!polje.isZauzeto()) {
+                pravokutnik.setFill(Color.LIGHTGRAY);
+            } else if (polje.getIndeksVlasnika() == 0) {
+                pravokutnik.setFill(Color.SEAGREEN);
+            } else {
+                pravokutnik.setFill(Color.DODGERBLUE);
+            }
+        }
     }
 
     public void azurirajCijeloSucelje(ReviveEngine reviveEngine, Label labelaTrenutniIgrac, Label labelaRunda,
@@ -73,11 +83,11 @@ public class AzuriranjeSucelja {
     }
 
     private void azurirajListuKarata(Igrac igrac, ListView<String> listaKarata, boolean prikaziPuniNaziv) {
-        List<String> nazivKarataZaPrikaz = new ArrayList<>();
+        List<String> nazivi = new ArrayList<>();
         for (Karta karta : igrac.getRukaKarata()) {
-            nazivKarataZaPrikaz.add(prikaziPuniNaziv ? karta.toString() : POLEDJINA_KARTE);
+            nazivi.add(prikaziPuniNaziv ? karta.toString() : POLEDJINA_KARTE);
         }
-        listaKarata.getItems().setAll(nazivKarataZaPrikaz);
+        listaKarata.getItems().setAll(nazivi);
     }
 
     private String formatirajStanjeIgraca(Igrac igrac) {
@@ -85,25 +95,6 @@ public class AzuriranjeSucelja {
                 + "   Zupcanici: " + igrac.getZupcanici()
                 + "   Kristali: " + igrac.getKristali()
                 + "\nMasine: " + igrac.getIzgradjeneMasine().size()
-                + "   Zapisi: " + igrac.getBrojNaucenihZapisa()
-                + "   Eksperimenti: " + igrac.getBrojIzucenihEksperimenata()
-                + "\nBodovi: " + igrac.izracunajUkupneBodoveNaKraju();
-    }
-
-    public String azurirajGumbeRadnika(Karta odabranaKarta, Button gumbExplorer, Button gumbBuilder,
-                                       Button gumbScholar, Button gumbScientist) {
-        TipRadnika potrebniTip = odabranaKarta == null ? null : odabranaKarta.getTipAkcije().getPovezaniTipRadnika();
-
-        gumbExplorer.setDisable(potrebniTip != TipRadnika.EXPLORER);
-        gumbBuilder.setDisable(potrebniTip != TipRadnika.BUILDER);
-        gumbScholar.setDisable(potrebniTip != TipRadnika.SCHOLAR);
-        gumbScientist.setDisable(potrebniTip != TipRadnika.SCIENTIST);
-
-        if (potrebniTip == null) {
-            return "Odaberi kartu iz svoje ruke.";
-        } else if (potrebniTip == TipRadnika.EXPLORER) {
-            return "Karta zahtijeva EXPLORER - klikni Permafrost polje.";
-        }
-        return "Karta zahtijeva " + potrebniTip + " - klikni taj gumb.";
+                + "   Bodovi: " + igrac.izracunajUkupneBodoveNaKraju();
     }
 }

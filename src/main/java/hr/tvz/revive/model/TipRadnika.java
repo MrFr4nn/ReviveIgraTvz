@@ -1,19 +1,48 @@
 package hr.tvz.revive.model;
 
-public enum TipRadnika {
+import java.io.Serializable;
 
-    EXPLORER("Topi jedno polje na Permafrost ploci i otkriva bonus"),
-    BUILDER("Gradi jednu Masinu ako igrac ima dovoljno zupcanika"),
-    SCHOLAR("Izvlaci jednu novu kartu iz spila u ruku igraca"),
-    SCIENTIST("Odigrava kartu iz ruke i pretvara je u bodove");
+public class PoljePermafrosta implements Serializable {
 
-    private final String opisSposobnosti;
+    private static final long serialVersionUID = 1L;
 
-    TipRadnika(String opisSposobnosti) {
-        this.opisSposobnosti = opisSposobnosti;
+    private int redak;
+    private int stupac;
+    private boolean zauzeto;
+    private int indeksVlasnika;
+    private TipRadnika tipRadnikaNaPolju;
+
+    public PoljePermafrosta(int redak, int stupac) {
+        this.redak = redak;
+        this.stupac = stupac;
+        this.zauzeto = false;
+        this.indeksVlasnika = -1;
+        this.tipRadnikaNaPolju = null;
     }
 
-    public String getOpisSposobnosti() {
-        return opisSposobnosti;
+    public int getRedak() {
+        return redak;
+    }
+
+    public int getStupac() {
+        return stupac;
+    }
+
+    public boolean isZauzeto() {
+        return zauzeto;
+    }
+
+    public int getIndeksVlasnika() {
+        return indeksVlasnika;
+    }
+
+    public TipRadnika getTipRadnikaNaPolju() {
+        return tipRadnikaNaPolju;
+    }
+
+    public void zauzmi(int indeksVlasnika, TipRadnika tipRadnika) {
+        this.zauzeto = true;
+        this.indeksVlasnika = indeksVlasnika;
+        this.tipRadnikaNaPolju = tipRadnika;
     }
 }

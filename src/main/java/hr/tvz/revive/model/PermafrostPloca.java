@@ -3,7 +3,6 @@ package hr.tvz.revive.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class PermafrostPloca implements Serializable {
 
@@ -19,14 +18,9 @@ public class PermafrostPloca implements Serializable {
     }
 
     private void popuniPlocu() {
-        Random nasumicniGenerator = new Random();
-        VrstaNagradePermafrosta[] sveVrsteNagrada = VrstaNagradePermafrosta.values();
-
         for (int redak = 0; redak < VELICINA; redak++) {
             for (int stupac = 0; stupac < VELICINA; stupac++) {
-                int nasumicniIndeks = nasumicniGenerator.nextInt(sveVrsteNagrada.length);
-                VrstaNagradePermafrosta odabranaVrsta = sveVrsteNagrada[nasumicniIndeks];
-                polja.add(new PoljePermafrosta(redak, stupac, odabranaVrsta));
+                polja.add(new PoljePermafrosta(redak, stupac));
             }
         }
     }
@@ -42,35 +36,5 @@ public class PermafrostPloca implements Serializable {
             }
         }
         return null;
-    }
-
-    public PoljePermafrosta pronadjiSljedecePrazamrznutoPolje() {
-        for (PoljePermafrosta polje : polja) {
-            if (!polje.isOtopljeno()) {
-                return polje;
-            }
-        }
-        return null;
-    }
-
-    public PoljePermafrosta pronadjiPoljeZaOtapanje(int redak, int stupac) {
-        if (redak < 0 || stupac < 0) {
-            return pronadjiSljedecePrazamrznutoPolje();
-        }
-        PoljePermafrosta odabranoPolje = pronadjiPolje(redak, stupac);
-        if (odabranoPolje != null && odabranoPolje.isOtopljeno()) {
-            return null;
-        }
-        return odabranoPolje;
-    }
-
-    public int brojOtopljenihPolja() {
-        int brojac = 0;
-        for (PoljePermafrosta polje : polja) {
-            if (polje.isOtopljeno()) {
-                brojac++;
-            }
-        }
-        return brojac;
     }
 }

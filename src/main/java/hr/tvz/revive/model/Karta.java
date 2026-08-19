@@ -30,6 +30,6 @@ public class Karta implements Serializable {
 
     @Override
     public String toString() {
-        return naziv + " (" + tipAkcije + " +" + vrijednost + ")";
+        return naziv + " (+" + vrijednost + ")";
     }
 }

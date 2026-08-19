@@ -6,7 +6,7 @@ public class RezultatPoteza {
 
     private boolean uspjesno;
     private String poruka;
-    private PoljePermafrosta otopljenoPolje;
+    private PoljePermafrosta postavljenoPolje;
 
     public boolean isUspjesno() {
         return uspjesno;
@@ -24,11 +24,11 @@ public class RezultatPoteza {
         this.poruka = poruka;
     }
 
-    public PoljePermafrosta getOtopljenoPolje() {
-        return otopljenoPolje;
+    public PoljePermafrosta getPostavljenoPolje() {
+        return postavljenoPolje;
     }
 
-    public void setOtopljenoPolje(PoljePermafrosta otopljenoPolje) {
-        this.otopljenoPolje = otopljenoPolje;
+    public void setPostavljenoPolje(PoljePermafrosta postavljenoPolje) {
+        this.postavljenoPolje = postavljenoPolje;
     }
 }

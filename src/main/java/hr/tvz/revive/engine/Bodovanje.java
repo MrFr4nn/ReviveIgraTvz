@@ -3,7 +3,6 @@ package hr.tvz.revive.engine;
 import hr.tvz.revive.model.Igrac;
 import java.util.List;
 
-
 public class Bodovanje {
 
     public Igrac pronadjiPobjednika(List<Igrac> igraci) {
@@ -19,16 +18,5 @@ public class Bodovanje {
         }
 
         return pobjednik;
-    }
-
-    public String formatirajKonacneRezultate(List<Igrac> igraci) {
-        StringBuilder tekstRezultata = new StringBuilder();
-        for (Igrac igrac : igraci) {
-            tekstRezultata.append(igrac.getImeIgraca());
-            tekstRezultata.append(": ");
-            tekstRezultata.append(igrac.izracunajUkupneBodoveNaKraju());
-            tekstRezultata.append(" bodova\n");
-        }
-        return tekstRezultata.toString();
     }
 }
