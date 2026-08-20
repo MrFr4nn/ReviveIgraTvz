@@ -22,6 +22,8 @@
             <xs:enumeration value="BUILDER"/>
             <xs:enumeration value="SCHOLAR"/>
             <xs:enumeration value="SCIENTIST"/>
+            <xs:enumeration value="KARTA"/>
+            <xs:enumeration value="PREDAJA"/>
         </xs:restriction>
     </xs:simpleType>
 

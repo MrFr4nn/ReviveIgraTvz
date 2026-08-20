@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ReviveEngine {
 
-    public static final int BROJ_RUNDI = 3;
+    public static final int BROJ_RUNDI = 5;
     private static final int CIJENA_EXPLORER = 1;
     private static final int CIJENA_BUILDER = 2;
     private static final int CIJENA_SCHOLAR = 2;
@@ -104,6 +104,13 @@ public class ReviveEngine {
 
         rezultatPoteza.setUspjesno(true);
         rezultatPoteza.setPoruka("Odigrana karta: " + odabranaKarta.getNaziv() + ".");
+        return rezultatPoteza;
+    }
+
+    public RezultatPoteza predajPotez() {
+        RezultatPoteza rezultatPoteza = new RezultatPoteza();
+        rezultatPoteza.setUspjesno(true);
+        rezultatPoteza.setPoruka(getIgracNaPotezu().getImeIgraca() + " je predao potez.");
         return rezultatPoteza;
     }
 

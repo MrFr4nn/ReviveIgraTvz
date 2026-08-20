@@ -2,7 +2,6 @@ package hr.tvz.revive.xml;
 
 import hr.tvz.revive.model.Karta;
 import hr.tvz.revive.model.TipRadnika;
-
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -27,11 +26,27 @@ public class ZapisPoteza {
         zapisiNaDisk();
     }
 
-    public void zapisiPotez(int brojRunde, String imeIgraca, Karta odigranaKarta, TipRadnika tipRadnika) {
+    public void zapisiPostavljanjeRadnika(int brojRunde, String imeIgraca, TipRadnika tipRadnika) {
         if (odigraniPotezi == null) {
             return;
         }
-        odigraniPotezi.add(new PodatakOPotezu(brojRunde, imeIgraca, odigranaKarta.getNaziv(), tipRadnika.name()));
+        odigraniPotezi.add(new PodatakOPotezu(brojRunde, imeIgraca, "postavljanje radnika", tipRadnika.name()));
+        zapisiNaDisk();
+    }
+
+    public void zapisiPotezKarte(int brojRunde, String imeIgraca, Karta odigranaKarta) {
+        if (odigraniPotezi == null) {
+            return;
+        }
+        odigraniPotezi.add(new PodatakOPotezu(brojRunde, imeIgraca, odigranaKarta.getNaziv(), "KARTA"));
+        zapisiNaDisk();
+    }
+
+    public void zapisiPredajuPoteza(int brojRunde, String imeIgraca) {
+        if (odigraniPotezi == null) {
+            return;
+        }
+        odigraniPotezi.add(new PodatakOPotezu(brojRunde, imeIgraca, "-", "PREDAJA"));
         zapisiNaDisk();
     }
 

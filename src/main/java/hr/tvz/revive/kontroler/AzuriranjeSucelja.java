@@ -7,7 +7,6 @@ import hr.tvz.revive.model.PermafrostPloca;
 import hr.tvz.revive.model.PoljePermafrosta;
 import hr.tvz.revive.model.Radnik;
 import hr.tvz.revive.model.TipRadnika;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -21,7 +20,7 @@ import java.util.List;
 public class AzuriranjeSucelja {
 
     private static final int VELICINA_PRAVOKUTNIKA_POLJA = 70;
-    private static final String POLEDJINA_KARTE = "🂠 Skrivena karta";
+    private static final String POLEDJINA_KARTE = "Skrivena karta protivnika";
 
     public Rectangle[][] izgradiPermafrostMrezu(GridPane mrezaPermafrosta) {
         int velicina = PermafrostPloca.VELICINA;
@@ -80,7 +79,10 @@ public class AzuriranjeSucelja {
         labelaTrenutniIgrac.setStyle("-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold; "
                 + "-fx-padding: 4 14; -fx-background-radius: 8; -fx-background-color: "
                 + (prviIgracNaPotezu ? "#2ecc71" : "#3498db") + ";");
-        labelaRunda.setText("Runda: " + reviveEngine.getTrenutnaRunda() + " / " + ReviveEngine.BROJ_RUNDI);
+        int trenutnaRunda = reviveEngine.getTrenutnaRunda();
+        boolean zavrsnaRunda = trenutnaRunda == ReviveEngine.BROJ_RUNDI;
+        labelaRunda.setText("Runda " + trenutnaRunda + "/" + ReviveEngine.BROJ_RUNDI
+                + (zavrsnaRunda ? " - Zavrsna runda" : ""));
 
         azurirajListuKarata(prviIgrac, listaKarataIgrac1, prviIgracNaPotezu);
         azurirajListuKarata(drugiIgrac, listaKarataIgrac2, !prviIgracNaPotezu);
@@ -100,7 +102,7 @@ public class AzuriranjeSucelja {
     private void azurirajJedanGumb(Button gumb, String naziv, String cijena, Igrac igrac, TipRadnika tip) {
         Radnik radnik = igrac.pronadjiNepostavljenogRadnika(tip);
         boolean dostupan = radnik != null;
-        gumb.setText(naziv + " (" + (dostupan ? "1/1, " + cijena : "0/1 iskoristen") + ")");
+        gumb.setText(naziv + " (" + cijena + ") " + (dostupan ? "1/1" : "0/1"));
         gumb.setDisable(!dostupan);
     }
 

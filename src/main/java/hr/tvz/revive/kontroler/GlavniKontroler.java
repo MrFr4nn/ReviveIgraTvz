@@ -83,7 +83,12 @@ public class GlavniKontroler {
             return;
         }
         Karta odabranaKarta = reviveEngine.getIgracNaPotezu().getRukaKarata().get(indeks);
-        obradiRezultat(reviveEngine.odigrajKartu(odabranaKarta));
+        String imeIgracaNaPotezu = reviveEngine.getIgracNaPotezu().getImeIgraca();
+        RezultatPoteza rezultatPoteza = reviveEngine.odigrajKartu(odabranaKarta);
+        if (rezultatPoteza.isUspjesno()) {
+            zapisPoteza.zapisiPotezKarte(reviveEngine.getTrenutnaRunda(), imeIgracaNaPotezu, odabranaKarta);
+        }
+        obradiRezultat(rezultatPoteza);
     }
 
     @FXML
@@ -113,10 +118,13 @@ public class GlavniKontroler {
             labelaPorukaPoteza.setText("Prvo odaberi tip radnika desno.");
             return;
         }
-        RezultatPoteza rezultatPoteza = reviveEngine.postaviRadnika(odabraniTipRadnika, redak, stupac);
+        TipRadnika tipRadnika = odabraniTipRadnika;
+        String imeIgracaNaPotezu = reviveEngine.getIgracNaPotezu().getImeIgraca();
+        RezultatPoteza rezultatPoteza = reviveEngine.postaviRadnika(tipRadnika, redak, stupac);
         odabraniTipRadnika = null;
         if (rezultatPoteza.isUspjesno()) {
             pomocneAkcijeKontrolera.pokreniAnimacijuPostavljanja(rezultatPoteza, pravokutniciPermafrosta);
+            zapisPoteza.zapisiPostavljanjeRadnika(reviveEngine.getTrenutnaRunda(), imeIgracaNaPotezu, tipRadnika);
         }
         obradiRezultat(rezultatPoteza);
     }
@@ -142,7 +150,7 @@ public class GlavniKontroler {
         pomocneAkcijeKontrolera.prikaziPlutajucePoruke(nagrade, slojPoruka, pravokutniciPermafrosta);
         if (reviveEngine.jeIgraZavrsena()) {
             zapisPoteza.zavrsiZapis();
-            pomocneAkcijeKontrolera.prikaziKrajIgre(reviveEngine, this::pokreniNovuPartiju);
+            pomocneAkcijeKontrolera.prikaziKrajIgre(reviveEngine, this::pokreniNovuPartiju, this::ucitajIgru);
         }
         azurirajSucelje();
     }
@@ -159,21 +167,9 @@ public class GlavniKontroler {
     private void spremiIgru() {
         pomocneAkcijeKontrolera.spremiIgru(reviveEngine, labelaPorukaPoteza);
     }
-    @FXML
+
     private void ucitajIgru() {
         pomocneAkcijeKontrolera.ucitajIgru(reviveEngine, labelaPorukaPoteza);
         azurirajSucelje();
-    }
-    @FXML
-    private void prikaziKatalogRadnika() {
-        pomocneAkcijeKontrolera.prikaziKatalogRadnika();
-    }
-    @FXML
-    private void prikaziReplay() {
-        pomocneAkcijeKontrolera.prikaziReplay();
-    }
-    @FXML
-    private void igrajPonovno() {
-        pokreniNovuPartiju();
     }
 }

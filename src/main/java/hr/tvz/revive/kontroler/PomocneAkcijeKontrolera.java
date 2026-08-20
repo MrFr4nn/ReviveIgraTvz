@@ -14,6 +14,7 @@ import hr.tvz.revive.serijalizacija.SpremanjeIgre;
 import hr.tvz.revive.xml.PodatakOPotezu;
 import hr.tvz.revive.xml.ReplaySustav;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -30,6 +31,7 @@ public class PomocneAkcijeKontrolera {
     private static final String PUTANJA_REPLAY_FXML = "/hr/tvz/revive/replay-ekran.fxml";
     private static final String PUTANJA_KATALOG_FXML = "/hr/tvz/revive/katalog-ekran.fxml";
     private static final String PUTANJA_KRAJ_IGRE_FXML = "/hr/tvz/revive/kraj-igre-ekran.fxml";
+    private static final double POMAK_PORUKE_IZNAD_POLJA = 24;
 
     public void spremiIgru(ReviveEngine reviveEngine, Label labelaPorukaPoteza) {
         StanjeIgre stanjeIgre = new StanjeIgre(reviveEngine.getIgraci(), reviveEngine.getPermafrostPloca(),
@@ -94,7 +96,7 @@ public class PomocneAkcijeKontrolera {
         }
     }
 
-    public void prikaziKrajIgre(ReviveEngine reviveEngine, Runnable akcijaIgrajPonovno) {
+    public void prikaziKrajIgre(ReviveEngine reviveEngine, Runnable akcijaIgrajPonovno, Runnable akcijaUcitajIgru) {
         try {
             Bodovanje bodovanje = new Bodovanje();
             Igrac pobjednik = bodovanje.pronadjiPobjednika(reviveEngine.getIgraci());
@@ -105,7 +107,7 @@ public class PomocneAkcijeKontrolera {
 
             KontrolerKrajIgre kontrolerKrajIgre = ucitavacFxml.getController();
             kontrolerKrajIgre.postaviPodatke("Pobjednik: " + pobjednik.getImeIgraca(), tekstRezultata,
-                    akcijaIgrajPonovno, this::prikaziReplay);
+                    akcijaIgrajPonovno, this::prikaziReplay, akcijaUcitajIgru, this::prikaziKatalogRadnika);
 
             Stage prozorKrajaIgre = new Stage();
             prozorKrajaIgre.setTitle("Igra zavrsena");
@@ -139,8 +141,15 @@ public class PomocneAkcijeKontrolera {
         PlutajucaPoruka plutajucaPoruka = new PlutajucaPoruka();
         for (PodatakONagradi nagrada : nagrade) {
             Rectangle pravokutnik = pravokutnici[nagrada.getRedak()][nagrada.getStupac()];
+
+            Bounds granicePoljaUSceni = pravokutnik.localToScene(pravokutnik.getBoundsInLocal());
+            Bounds granicePoljaULokalu = slojPoruka.sceneToLocal(granicePoljaUSceni);
+
+            double sredinaX = granicePoljaULokalu.getMinX() + granicePoljaULokalu.getWidth() / 2;
+            double vrhY = granicePoljaULokalu.getMinY();
+
             plutajucaPoruka.prikaziPoruku(slojPoruka, nagrada.getTekstNagrade(),
-                    pravokutnik.getX(), pravokutnik.getY() - 20);
+                    sredinaX, vrhY - POMAK_PORUKE_IZNAD_POLJA);
         }
     }
 }

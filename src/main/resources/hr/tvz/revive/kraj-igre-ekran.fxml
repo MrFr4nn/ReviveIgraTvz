@@ -9,7 +9,7 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="hr.tvz.revive.kontroler.KontrolerKrajIgre"
-            prefHeight="420.0" prefWidth="520.0"
+            prefHeight="460.0" prefWidth="520.0"
             style="-fx-background-color: #1f2d3d;">
 
     <center>
@@ -22,6 +22,10 @@
                 <Button fx:id="gumbIgrajPonovno" text="Igraj ponovno" onAction="#igrajPonovno" prefWidth="150" prefHeight="36"
                         style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
                 <Button fx:id="gumbPrikaziReplay" text="Prikazi replay" onAction="#prikaziReplay" prefWidth="150" prefHeight="36"/>
+            </HBox>
+            <HBox spacing="12" alignment="CENTER">
+                <Button fx:id="gumbUcitajIgru" text="Ucitaj igru" onAction="#ucitajIgru" prefWidth="150" prefHeight="36"/>
+                <Button fx:id="gumbPrikaziKatalog" text="Reflection katalog" onAction="#prikaziKatalogRadnika" prefWidth="150" prefHeight="36"/>
             </HBox>
             <Button text="Zatvori" onAction="#zatvoriProzor" prefWidth="120" prefHeight="32"/>
         </VBox>

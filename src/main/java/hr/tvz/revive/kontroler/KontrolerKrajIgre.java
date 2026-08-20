@@ -14,13 +14,18 @@ public class KontrolerKrajIgre {
 
     private Runnable akcijaIgrajPonovno;
     private Runnable akcijaPrikaziReplay;
+    private Runnable akcijaUcitajIgru;
+    private Runnable akcijaPrikaziKatalog;
 
     public void postaviPodatke(String tekstPobjednika, String tekstRezultata,
-                               Runnable akcijaIgrajPonovno, Runnable akcijaPrikaziReplay) {
+                               Runnable akcijaIgrajPonovno, Runnable akcijaPrikaziReplay,
+                               Runnable akcijaUcitajIgru, Runnable akcijaPrikaziKatalog) {
         labelaPobjednik.setText(tekstPobjednika);
         labelaRezultati.setText(tekstRezultata);
         this.akcijaIgrajPonovno = akcijaIgrajPonovno;
         this.akcijaPrikaziReplay = akcijaPrikaziReplay;
+        this.akcijaUcitajIgru = akcijaUcitajIgru;
+        this.akcijaPrikaziKatalog = akcijaPrikaziKatalog;
     }
 
     @FXML
@@ -32,6 +37,17 @@ public class KontrolerKrajIgre {
     @FXML
     private void prikaziReplay() {
         akcijaPrikaziReplay.run();
+    }
+
+    @FXML
+    private void ucitajIgru() {
+        akcijaUcitajIgru.run();
+        zatvoriProzor();
+    }
+
+    @FXML
+    private void prikaziKatalogRadnika() {
+        akcijaPrikaziKatalog.run();
     }
 
     @FXML

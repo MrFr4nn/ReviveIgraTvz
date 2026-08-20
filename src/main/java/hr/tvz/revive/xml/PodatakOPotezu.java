@@ -32,7 +32,12 @@ public class PodatakOPotezu {
 
     @Override
     public String toString() {
-        return "Runda " + brojRunde + ": " + imeIgraca + " je odigrao kartu '"
-                + nazivKarte + "' s radnikom " + tipRadnika;
+        if ("KARTA".equals(tipRadnika)) {
+            return "Runda " + brojRunde + ": " + imeIgraca + " je odigrao kartu '" + nazivKarte + "'";
+        }
+        if ("PREDAJA".equals(tipRadnika)) {
+            return "Runda " + brojRunde + ": " + imeIgraca + " je predao potez";
+        }
+        return "Runda " + brojRunde + ": " + imeIgraca + " je postavio radnika " + tipRadnika;
     }
 }
