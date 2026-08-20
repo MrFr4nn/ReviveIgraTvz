@@ -23,10 +23,7 @@
                         style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
                 <Button fx:id="gumbPrikaziReplay" text="Prikazi replay" onAction="#prikaziReplay" prefWidth="150" prefHeight="36"/>
             </HBox>
-            <HBox spacing="12" alignment="CENTER">
-                <Button fx:id="gumbUcitajIgru" text="Ucitaj igru" onAction="#ucitajIgru" prefWidth="150" prefHeight="36"/>
-                <Button fx:id="gumbPrikaziKatalog" text="Reflection katalog" onAction="#prikaziKatalogRadnika" prefWidth="150" prefHeight="36"/>
-            </HBox>
+            <Button fx:id="gumbPrikaziKatalog" text="Reflection katalog" onAction="#prikaziKatalogRadnika" prefWidth="150" prefHeight="36"/>
             <Button text="Zatvori" onAction="#zatvoriProzor" prefWidth="120" prefHeight="32"/>
         </VBox>
     </center>

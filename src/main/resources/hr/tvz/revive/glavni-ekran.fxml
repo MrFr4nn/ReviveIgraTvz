@@ -95,6 +95,7 @@
     <bottom>
         <HBox spacing="10" alignment="CENTER" style="-fx-background-color: white; -fx-padding: 12; -fx-border-color: #dcdfe3; -fx-border-width: 2 0 0 0;">
             <Button fx:id="gumbSpremiIgru" text="Spremi igru" onAction="#spremiIgru" prefWidth="150" prefHeight="32"/>
+            <Button fx:id="gumbUcitajIgru" text="Ucitaj igru" onAction="#ucitajIgru" prefWidth="150" prefHeight="32"/>
         </HBox>
     </bottom>
 

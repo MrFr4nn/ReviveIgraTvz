@@ -58,6 +58,10 @@ public class PomocneAkcijeKontrolera {
         return true;
     }
 
+    public void obrisiSpremljenuIgru() {
+        new SpremanjeIgre().obrisiSpremljenuIgru();
+    }
+
     public void prikaziKatalogRadnika() {
         try {
             KatalogRadnikaGenerator katalogRadnikaGenerator = new KatalogRadnikaGenerator();
@@ -96,7 +100,7 @@ public class PomocneAkcijeKontrolera {
         }
     }
 
-    public void prikaziKrajIgre(ReviveEngine reviveEngine, Runnable akcijaIgrajPonovno, Runnable akcijaUcitajIgru) {
+    public void prikaziKrajIgre(ReviveEngine reviveEngine, Runnable akcijaIgrajPonovno) {
         try {
             Bodovanje bodovanje = new Bodovanje();
             Igrac pobjednik = bodovanje.pronadjiPobjednika(reviveEngine.getIgraci());
@@ -107,7 +111,7 @@ public class PomocneAkcijeKontrolera {
 
             KontrolerKrajIgre kontrolerKrajIgre = ucitavacFxml.getController();
             kontrolerKrajIgre.postaviPodatke("Pobjednik: " + pobjednik.getImeIgraca(), tekstRezultata,
-                    akcijaIgrajPonovno, this::prikaziReplay, akcijaUcitajIgru, this::prikaziKatalogRadnika);
+                    akcijaIgrajPonovno, this::prikaziReplay, this::prikaziKatalogRadnika);
 
             Stage prozorKrajaIgre = new Stage();
             prozorKrajaIgre.setTitle("Igra zavrsena");

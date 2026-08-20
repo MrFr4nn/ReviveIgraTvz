@@ -1,6 +1,7 @@
 package hr.tvz.revive.serijalizacija;
 
 import hr.tvz.revive.model.StanjeIgre;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,6 +34,13 @@ public class SpremanjeIgre {
         } catch (IOException | ClassNotFoundException iznimka) {
             System.out.println("Greska prilikom ucitavanja igre: " + iznimka.getMessage());
             return null;
+        }
+    }
+
+    public void obrisiSpremljenuIgru() {
+        File datoteka = new File(PUTANJA_DATOTEKE);
+        if (datoteka.exists() && !datoteka.delete()) {
+            System.out.println("Greska prilikom brisanja stare spremljene igre.");
         }
     }
 }

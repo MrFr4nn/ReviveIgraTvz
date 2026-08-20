@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <dnevnikIgre>
-    <potez igrac="Igrac 1" karta="postavljanje radnika" radnik="EXPLORER" runda="1"/>
-    <potez igrac="Igrac 2" karta="Energetski kristal" radnik="KARTA" runda="1"/>
-    <potez igrac="Igrac 1" karta="postavljanje radnika" radnik="BUILDER" runda="2"/>
-    <potez igrac="Igrac 2" karta="postavljanje radnika" radnik="BUILDER" runda="2"/>
-    <potez igrac="Igrac 1" karta="postavljanje radnika" radnik="SCHOLAR" runda="3"/>
-    <potez igrac="Igrac 2" karta="postavljanje radnika" radnik="SCIENTIST" runda="3"/>
-    <potez igrac="Igrac 1" karta="Veliki kristal" radnik="KARTA" runda="4"/>
-    <potez igrac="Igrac 2" karta="postavljanje radnika" radnik="EXPLORER" runda="4"/>
-    <potez igrac="Igrac 1" karta="postavljanje radnika" radnik="SCIENTIST" runda="5"/>
-    <potez igrac="Igrac 2" karta="postavljanje radnika" radnik="SCHOLAR" runda="5"/>
-    <potez igrac="Igrac 1" karta="postavljanje radnika" radnik="SCHOLAR" runda="4"/>
-    <potez igrac="Igrac 2" karta="postavljanje radnika" radnik="BUILDER" runda="4"/>
+    <potez igrac="Igrac 1" karta="-" radnik="PREDAJA" runda="1"/>
+    <potez igrac="Igrac 1" karta="-" radnik="PREDAJA" runda="1"/>
+    <potez igrac="Igrac 1" karta="-" radnik="PREDAJA" runda="1"/>
+    <potez igrac="Igrac 1" karta="-" radnik="PREDAJA" runda="1"/>
+    <potez igrac="Igrac 2" karta="-" radnik="PREDAJA" runda="1"/>
+    <potez igrac="Igrac 2" karta="-" radnik="PREDAJA" runda="2"/>
+    <potez igrac="Igrac 1" karta="-" radnik="PREDAJA" runda="3"/>
+    <potez igrac="Igrac 2" karta="-" radnik="PREDAJA" runda="3"/>
+    <potez igrac="Igrac 2" karta="-" radnik="PREDAJA" runda="3"/>
+    <potez igrac="Igrac 1" karta="-" radnik="PREDAJA" runda="4"/>
+    <potez igrac="Igrac 2" karta="-" radnik="PREDAJA" runda="4"/>
+    <potez igrac="Igrac 2" karta="-" radnik="PREDAJA" runda="4"/>
+    <potez igrac="Igrac 2" karta="-" radnik="PREDAJA" runda="5"/>
+    <potez igrac="Igrac 1" karta="-" radnik="PREDAJA" runda="6"/>
+    <potez igrac="Igrac 1" karta="-" radnik="PREDAJA" runda="8"/>
 </dnevnikIgre>
