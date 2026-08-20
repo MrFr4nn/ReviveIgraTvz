@@ -21,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
@@ -100,7 +101,7 @@ public class PomocneAkcijeKontrolera {
         }
     }
 
-    public void prikaziKrajIgre(ReviveEngine reviveEngine, Runnable akcijaIgrajPonovno) {
+    public void prikaziKrajIgre(ReviveEngine reviveEngine, Stage vlasnickiProzor, Runnable akcijaIgrajPonovno) {
         try {
             Bodovanje bodovanje = new Bodovanje();
             Igrac pobjednik = bodovanje.pronadjiPobjednika(reviveEngine.getIgraci());
@@ -116,7 +117,9 @@ public class PomocneAkcijeKontrolera {
             Stage prozorKrajaIgre = new Stage();
             prozorKrajaIgre.setTitle("Igra zavrsena");
             prozorKrajaIgre.setScene(new Scene(korijenskiElement));
-            prozorKrajaIgre.show();
+            prozorKrajaIgre.initOwner(vlasnickiProzor);
+            prozorKrajaIgre.initModality(Modality.WINDOW_MODAL);
+            prozorKrajaIgre.showAndWait();
         } catch (IOException iznimka) {
             System.out.println("Greska prilikom otvaranja ekrana kraja igre: " + iznimka.getMessage());
         }

@@ -50,6 +50,14 @@ public class ZapisPoteza {
         zapisiNaDisk();
     }
 
+    public void zapisiNagradu(int brojRunde, String imeIgraca, String tekstNagrade) {
+        if (odigraniPotezi == null) {
+            return;
+        }
+        odigraniPotezi.add(new PodatakOPotezu(brojRunde, imeIgraca, tekstNagrade, "NAGRADA"));
+        zapisiNaDisk();
+    }
+
     public void zavrsiZapis() {
         zapisiNaDisk();
     }

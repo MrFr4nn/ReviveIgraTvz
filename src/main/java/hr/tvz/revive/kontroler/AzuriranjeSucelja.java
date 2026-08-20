@@ -20,7 +20,7 @@ import java.util.List;
 public class AzuriranjeSucelja {
 
     private static final int VELICINA_PRAVOKUTNIKA_POLJA = 70;
-    private static final String POLEDJINA_KARTE = "Skrivena karta protivnika";
+    private static final String POLEDJINA_KARTE = "🂠 Skrivena karta";
 
     public Rectangle[][] izgradiPermafrostMrezu(GridPane mrezaPermafrosta) {
         int velicina = PermafrostPloca.VELICINA;
@@ -97,6 +97,25 @@ public class AzuriranjeSucelja {
         azurirajJedanGumb(gumbBuilder, "BUILDER", "2 zupcanika", igracNaPotezu, TipRadnika.BUILDER);
         azurirajJedanGumb(gumbScholar, "SCHOLAR", "2 hrane", igracNaPotezu, TipRadnika.SCHOLAR);
         azurirajJedanGumb(gumbScientist, "SCIENTIST", "1 kristal", igracNaPotezu, TipRadnika.SCIENTIST);
+    }
+
+    public void postaviOnemogucenostAkcija(boolean onemoguceno, Rectangle[][] pravokutniciPermafrosta,
+                                           Button gumbOdigrajKartu, Button gumbPredajPotez,
+                                           Button gumbExplorer, Button gumbBuilder,
+                                           Button gumbScholar, Button gumbScientist) {
+        gumbOdigrajKartu.setDisable(onemoguceno);
+        gumbPredajPotez.setDisable(onemoguceno);
+        if (onemoguceno) {
+            gumbExplorer.setDisable(true);
+            gumbBuilder.setDisable(true);
+            gumbScholar.setDisable(true);
+            gumbScientist.setDisable(true);
+        }
+        for (Rectangle[] redak : pravokutniciPermafrosta) {
+            for (Rectangle pravokutnik : redak) {
+                pravokutnik.setDisable(onemoguceno);
+            }
+        }
     }
 
     private void azurirajJedanGumb(Button gumb, String naziv, String cijena, Igrac igrac, TipRadnika tip) {

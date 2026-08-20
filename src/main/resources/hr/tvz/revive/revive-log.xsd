@@ -24,6 +24,7 @@
             <xs:enumeration value="SCIENTIST"/>
             <xs:enumeration value="KARTA"/>
             <xs:enumeration value="PREDAJA"/>
+            <xs:enumeration value="NAGRADA"/>
         </xs:restriction>
     </xs:simpleType>
 

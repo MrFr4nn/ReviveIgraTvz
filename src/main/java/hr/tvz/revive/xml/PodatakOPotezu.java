@@ -38,6 +38,9 @@ public class PodatakOPotezu {
         if ("PREDAJA".equals(tipRadnika)) {
             return "Runda " + brojRunde + ": " + imeIgraca + " je predao potez";
         }
+        if ("NAGRADA".equals(tipRadnika)) {
+            return "Runda " + brojRunde + ": " + imeIgraca + " je dobio nagradu (" + nazivKarte + ")";
+        }
         return "Runda " + brojRunde + ": " + imeIgraca + " je postavio radnika " + tipRadnika;
     }
 }
