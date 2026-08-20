@@ -43,10 +43,6 @@ public class GlavniKontroler {
     private Button gumbScholar;
     @FXML
     private Button gumbScientist;
-    @FXML
-    private Button gumbOdigrajKartu;
-    @FXML
-    private Button gumbPredajPotez;
     private ReviveEngine reviveEngine;
     private ZapisPoteza zapisPoteza;
     private AzuriranjeSucelja azuriranjeSucelja;
@@ -70,14 +66,12 @@ public class GlavniKontroler {
         zapisPoteza = new ZapisPoteza();
         reviveEngine.pokreniNovuIgru("Igrac 1", "Igrac 2");
         zapisPoteza.zapocniZapis();
-        obradaPotezaKontrolera = new ObradaPotezaKontrolera(reviveEngine, zapisPoteza, azuriranjeSucelja,
-                pomocneAkcijeKontrolera, slojPoruka, pravokutniciPermafrosta, labelaTrenutniIgrac,
-                gumbOdigrajKartu, gumbPredajPotez, gumbExplorer, gumbBuilder, gumbScholar, gumbScientist);
+        obradaPotezaKontrolera = new ObradaPotezaKontrolera(reviveEngine, zapisPoteza,
+                pomocneAkcijeKontrolera, slojPoruka, pravokutniciPermafrosta, labelaTrenutniIgrac);
         pomocneAkcijeKontrolera.obrisiSpremljenuIgru();
         odabraniTipRadnika = null;
         obradaUTijeku = false;
         labelaPorukaPoteza.setText("");
-        obradaPotezaKontrolera.omoguciSveAkcije();
         azurirajSucelje();
     }
 

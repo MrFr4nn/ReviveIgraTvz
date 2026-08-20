@@ -13,7 +13,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,25 +96,6 @@ public class AzuriranjeSucelja {
         azurirajJedanGumb(gumbBuilder, "BUILDER", "2 zupcanika", igracNaPotezu, TipRadnika.BUILDER);
         azurirajJedanGumb(gumbScholar, "SCHOLAR", "2 hrane", igracNaPotezu, TipRadnika.SCHOLAR);
         azurirajJedanGumb(gumbScientist, "SCIENTIST", "1 kristal", igracNaPotezu, TipRadnika.SCIENTIST);
-    }
-
-    public void postaviOnemogucenostAkcija(boolean onemoguceno, Rectangle[][] pravokutniciPermafrosta,
-                                           Button gumbOdigrajKartu, Button gumbPredajPotez,
-                                           Button gumbExplorer, Button gumbBuilder,
-                                           Button gumbScholar, Button gumbScientist) {
-        gumbOdigrajKartu.setDisable(onemoguceno);
-        gumbPredajPotez.setDisable(onemoguceno);
-        if (onemoguceno) {
-            gumbExplorer.setDisable(true);
-            gumbBuilder.setDisable(true);
-            gumbScholar.setDisable(true);
-            gumbScientist.setDisable(true);
-        }
-        for (Rectangle[] redak : pravokutniciPermafrosta) {
-            for (Rectangle pravokutnik : redak) {
-                pravokutnik.setDisable(onemoguceno);
-            }
-        }
     }
 
     private void azurirajJedanGumb(Button gumb, String naziv, String cijena, Igrac igrac, TipRadnika tip) {
