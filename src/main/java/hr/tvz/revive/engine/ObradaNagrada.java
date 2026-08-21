@@ -20,7 +20,7 @@ public class ObradaNagrada {
             case EXPLORER:
                 return dodijeliNagraduExplorera(igrac, spilKarata);
             case BUILDER:
-                igrac.getIzgradjeneMasine().add(new Masina("Mašina " + (igrac.getIzgradjeneMasine().size() + 1)));
+                igrac.getIzgradjeneMasine().add(new Masina());
                 return "+1 Mašina";
             case SCHOLAR:
                 igrac.dodajHranu(NAGRADA_PO_RUNDI);

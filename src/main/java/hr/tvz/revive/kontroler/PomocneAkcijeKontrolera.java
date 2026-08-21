@@ -14,6 +14,7 @@ import hr.tvz.revive.serijalizacija.SpremanjeIgre;
 import hr.tvz.revive.xml.CitacPoteza;
 import hr.tvz.revive.xml.PodatakOPotezu;
 import hr.tvz.revive.xml.ReplaySustav;
+import hr.tvz.revive.xml.ValidatorDnevnika;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.scene.Parent;
@@ -133,12 +134,21 @@ public class PomocneAkcijeKontrolera {
                     .append(igrac.izracunajUkupneBodoveNaKraju()).append(" bodova\n");
         }
         tekst.append("\nUkupno zabilježenih poteza: ").append(prebrojPoteze());
+        provjeriValjanostDnevnika();
         return tekst.toString();
     }
 
     private int prebrojPoteze() {
         CitacPoteza citacPoteza = new CitacPoteza();
         return citacPoteza.procitajPoteze(PUTANJA_XML_DNEVNIKA).size();
+    }
+
+    private void provjeriValjanostDnevnika() {
+        ValidatorDnevnika validatorDnevnika = new ValidatorDnevnika();
+        boolean valjan = validatorDnevnika.validirajDnevnik(PUTANJA_XML_DNEVNIKA);
+        if (!valjan) {
+            System.out.println("Upozorenje: revive-log.xml nije u skladu s XSD shemom.");
+        }
     }
 
     public void pokreniAnimacijuPostavljanja(RezultatPoteza rezultatPoteza, Rectangle[][] pravokutnici) {

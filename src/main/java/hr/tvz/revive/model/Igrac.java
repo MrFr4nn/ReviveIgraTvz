@@ -7,7 +7,6 @@ import java.util.List;
 public class Igrac implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     public static final int MAKSIMALNI_RESURS = 9;
 
     private String imeIgraca;
@@ -61,10 +60,6 @@ public class Igrac implements Serializable {
 
     public int getKristali() {
         return kristali;
-    }
-
-    public int getBodovi() {
-        return bodovi;
     }
 
     public void dodajHranu(int kolicina) {
