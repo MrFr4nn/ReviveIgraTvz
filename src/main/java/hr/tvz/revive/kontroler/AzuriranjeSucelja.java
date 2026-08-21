@@ -19,7 +19,7 @@ import java.util.List;
 public class AzuriranjeSucelja {
 
     private static final int VELICINA_PRAVOKUTNIKA_POLJA = 70;
-    private static final String POLEDJINA_KARTE = "🂠 Skrivena karta";
+    private static final String POLEDJINA_KARTE = "Skrivena karta protivnika";
 
     public Rectangle[][] izgradiPermafrostMrezu(GridPane mrezaPermafrosta) {
         int velicina = PermafrostPloca.VELICINA;
@@ -78,7 +78,7 @@ public class AzuriranjeSucelja {
         labelaTrenutniIgrac.setStyle("-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold; "
                 + "-fx-padding: 4 14; -fx-background-radius: 8; -fx-background-color: "
                 + (prviIgracNaPotezu ? "#2ecc71" : "#3498db") + ";");
-        int trenutnaRunda = reviveEngine.getTrenutnaRunda();
+        int trenutnaRunda = Math.min(reviveEngine.getTrenutnaRunda(), ReviveEngine.BROJ_RUNDI);
         boolean zavrsnaRunda = trenutnaRunda == ReviveEngine.BROJ_RUNDI;
         labelaRunda.setText("Runda " + trenutnaRunda + "/" + ReviveEngine.BROJ_RUNDI
                 + (zavrsnaRunda ? " - Zavrsna runda" : ""));

@@ -35,13 +35,11 @@ public class KontrolerKrajIgre {
     @FXML
     private void prikaziReplay() {
         akcijaPrikaziReplay.run();
-        zatvoriProzor();
     }
 
     @FXML
     private void prikaziKatalogRadnika() {
         akcijaPrikaziKatalog.run();
-        zatvoriProzor();
     }
 
     @FXML

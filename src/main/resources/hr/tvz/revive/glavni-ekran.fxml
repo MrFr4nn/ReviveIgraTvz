@@ -19,10 +19,10 @@
             style="-fx-background-color: #f4f6f8;">
 
     <top>
-        <VBox spacing="6" alignment="CENTER" fx:id="panelZaglavlja" style="-fx-background-color: #1f2d3d; -fx-padding: 18 18 14 18;">
-            <Label text="REVIVE - Obnova Civilizacije" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+        <VBox spacing="6" alignment="CENTER" fx:id="panelZaglavlja" style="-fx-background-color: white; -fx-padding: 18 18 14 18; -fx-border-color: #dcdfe3; -fx-border-width: 0 0 2 0;">
+            <Label text="REVIVE - Obnova Civilizacije" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
             <Label fx:id="labelaTrenutniIgrac" text="Na potezu: -" style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 4 14; -fx-background-color: #2ecc71; -fx-background-radius: 8;"/>
-            <Label fx:id="labelaRunda" text="Runda 1/5" style="-fx-font-size: 12px; -fx-text-fill: #95a5a6;"/>
+            <Label fx:id="labelaRunda" text="Runda 1/5" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
         </VBox>
     </top>
 
@@ -50,7 +50,7 @@
         <VBox spacing="14" alignment="TOP_CENTER" style="-fx-padding: 16 30 16 30;">
 
             <VBox spacing="6" alignment="CENTER">
-                <Label text="Permafrost ploca" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
+                <Label text="PERMAFROST PLOČA" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
                 <Label text="Zeleno = Igrac 1, Plavo = Igrac 2, Sivo = slobodno" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
                 <StackPane>
                     <GridPane fx:id="mrezaPermafrosta" hgap="10" vgap="10" alignment="CENTER"/>
@@ -62,25 +62,25 @@
 
             <HBox spacing="10" alignment="CENTER">
                 <Button fx:id="gumbOdigrajKartu" text="Odigraj odabranu kartu" onAction="#odigrajOdabranuKartu" prefWidth="260" prefHeight="38"
-                        style="-fx-background-color: #1f2d3d; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                        style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
                 <Button fx:id="gumbPredajPotez" text="Predaj potez" onAction="#predajPotez" prefWidth="160" prefHeight="38"
-                        style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                        style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
             </HBox>
 
             <Label text="ILI postavi radnika na ploci (plati ulaznu cijenu):" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
 
             <GridPane hgap="10" vgap="10" alignment="CENTER">
                 <Button fx:id="gumbExplorer" text="EXPLORER" onAction="#odaberiExplorer" prefWidth="200" prefHeight="42"
-                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;"
+                        style="-fx-font-weight: bold;"
                         GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                 <Button fx:id="gumbBuilder" text="BUILDER" onAction="#odaberiBuilder" prefWidth="200" prefHeight="42"
-                        style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-weight: bold;"
+                        style="-fx-font-weight: bold;"
                         GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                 <Button fx:id="gumbScholar" text="SCHOLAR" onAction="#odaberiScholar" prefWidth="200" prefHeight="42"
-                        style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold;"
+                        style="-fx-font-weight: bold;"
                         GridPane.rowIndex="1" GridPane.columnIndex="0"/>
                 <Button fx:id="gumbScientist" text="SCIENTIST" onAction="#odaberiScientist" prefWidth="200" prefHeight="42"
-                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"
+                        style="-fx-font-weight: bold;"
                         GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             </GridPane>
 
@@ -96,6 +96,7 @@
         <HBox spacing="10" alignment="CENTER" style="-fx-background-color: white; -fx-padding: 12; -fx-border-color: #dcdfe3; -fx-border-width: 2 0 0 0;">
             <Button fx:id="gumbSpremiIgru" text="Spremi igru" onAction="#spremiIgru" prefWidth="150" prefHeight="32"/>
             <Button fx:id="gumbUcitajIgru" text="Ucitaj igru" onAction="#ucitajIgru" prefWidth="150" prefHeight="32"/>
+            <Button fx:id="gumbIgrajPonovno" text="Igraj ponovno" onAction="#igrajPonovno" prefWidth="150" prefHeight="32"/>
         </HBox>
     </bottom>
 

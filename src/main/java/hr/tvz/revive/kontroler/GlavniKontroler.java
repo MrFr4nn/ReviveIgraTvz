@@ -189,4 +189,9 @@ public class GlavniKontroler {
         pomocneAkcijeKontrolera.ucitajIgru(reviveEngine, labelaPorukaPoteza);
         azurirajSucelje();
     }
+
+    @FXML
+    private void igrajPonovno() {
+        pokreniNovuPartiju();
+    }
 }
