@@ -64,7 +64,7 @@ public class GlavniKontroler {
 
     private void pokreniNovuPartiju() {
         zapisPoteza = new ZapisPoteza();
-        reviveEngine.pokreniNovuIgru("Igrac 1", "Igrac 2");
+        reviveEngine.pokreniNovuIgru("Igrač 1", "Igrač 2");
         zapisPoteza.zapocniZapis();
         obradaPotezaKontrolera = new ObradaPotezaKontrolera(reviveEngine, zapisPoteza,
                 pomocneAkcijeKontrolera, slojPoruka, pravokutniciPermafrosta, labelaTrenutniIgrac);
@@ -127,7 +127,7 @@ public class GlavniKontroler {
 
     private void postaviOdabraniTip(TipRadnika tip) {
         odabraniTipRadnika = tip;
-        labelaOdabranaAkcija.setText(tip + " odabran - klikni slobodno polje na ploci.");
+        labelaOdabranaAkcija.setText(tip + " odabran - klikni slobodno polje na ploči.");
     }
 
     private void kliknutoPolje(int redak, int stupac) {

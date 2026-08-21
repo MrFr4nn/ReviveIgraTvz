@@ -13,7 +13,7 @@
             style="-fx-background-color: #f4f6f8;">
 
     <top>
-        <Label text="Reflection katalog - dinamicka analiza modela" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 14;"/>
+        <Label text="Reflection katalog - dinamička analiza modela" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 14;"/>
     </top>
 
     <center>

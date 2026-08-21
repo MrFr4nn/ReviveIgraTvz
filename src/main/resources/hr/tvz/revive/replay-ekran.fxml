@@ -28,7 +28,7 @@
     <bottom>
         <HBox spacing="10" alignment="CENTER" style="-fx-padding: 16;">
             <Button fx:id="gumbPrethodniKorak" text="Prethodni korak" onAction="#prikaziPrethodniKorak" prefWidth="140"/>
-            <Button fx:id="gumbSljedeciKorak" text="Sljedeci korak" onAction="#prikaziSljedeciKorak" prefWidth="140"/>
+            <Button fx:id="gumbSljedeciKorak" text="Sljedeći korak" onAction="#prikaziSljedeciKorak" prefWidth="140"/>
         </HBox>
     </bottom>
 

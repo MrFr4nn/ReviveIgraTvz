@@ -42,7 +42,7 @@ public class PomocneAkcijeKontrolera {
         boolean uspjesnoSpremljeno = spremanjeIgre.spremiIgru(stanjeIgre);
 
         labelaPorukaPoteza.setText(uspjesnoSpremljeno
-                ? "Igra je uspjesno spremljena." : "Greska prilikom spremanja igre.");
+                ? "Igra je uspješno spremljena." : "Greška prilikom spremanja igre.");
     }
 
     public boolean ucitajIgru(ReviveEngine reviveEngine, Label labelaPorukaPoteza) {
@@ -50,12 +50,12 @@ public class PomocneAkcijeKontrolera {
         StanjeIgre ucitanoStanje = spremanjeIgre.ucitajIgru();
 
         if (ucitanoStanje == null) {
-            labelaPorukaPoteza.setText("Nema spremljene igre za ucitati.");
+            labelaPorukaPoteza.setText("Nema spremljene igre za učitati.");
             return false;
         }
 
         reviveEngine.primijeniUcitanoStanje(ucitanoStanje);
-        labelaPorukaPoteza.setText("Igra je uspjesno ucitana.");
+        labelaPorukaPoteza.setText("Igra je uspješno učitana.");
         return true;
     }
 
@@ -77,7 +77,7 @@ public class PomocneAkcijeKontrolera {
             prozorKataloga.setScene(new Scene(korijenskiElement));
             prozorKataloga.show();
         } catch (IOException iznimka) {
-            System.out.println("Greska prilikom otvaranja kataloga: " + iznimka.getMessage());
+            System.out.println("Greška prilikom otvaranja kataloga: " + iznimka.getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ public class PomocneAkcijeKontrolera {
             prozorReplaya.setScene(new Scene(korijenskiElement));
             prozorReplaya.show();
         } catch (IOException iznimka) {
-            System.out.println("Greska prilikom otvaranja replay prozora: " + iznimka.getMessage());
+            System.out.println("Greška prilikom otvaranja replay prozora: " + iznimka.getMessage());
         }
     }
 
@@ -115,13 +115,13 @@ public class PomocneAkcijeKontrolera {
                     akcijaIgrajPonovno, this::prikaziReplay, this::prikaziKatalogRadnika);
 
             Stage prozorKrajaIgre = new Stage();
-            prozorKrajaIgre.setTitle("Igra zavrsena");
+            prozorKrajaIgre.setTitle("Igra završena");
             prozorKrajaIgre.setScene(new Scene(korijenskiElement));
             prozorKrajaIgre.initOwner(vlasnickiProzor);
             prozorKrajaIgre.initModality(Modality.WINDOW_MODAL);
             prozorKrajaIgre.showAndWait();
         } catch (IOException iznimka) {
-            System.out.println("Greska prilikom otvaranja ekrana kraja igre: " + iznimka.getMessage());
+            System.out.println("Greška prilikom otvaranja ekrana kraja igre: " + iznimka.getMessage());
         }
     }
 

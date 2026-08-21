@@ -20,7 +20,7 @@ public class SpremanjeIgre {
             return true;
 
         } catch (IOException iznimka) {
-            System.out.println("Greska prilikom spremanja igre: " + iznimka.getMessage());
+            System.out.println("Greška prilikom spremanja igre: " + iznimka.getMessage());
             return false;
         }
     }
@@ -32,7 +32,7 @@ public class SpremanjeIgre {
             return (StanjeIgre) tokObjekata.readObject();
 
         } catch (IOException | ClassNotFoundException iznimka) {
-            System.out.println("Greska prilikom ucitavanja igre: " + iznimka.getMessage());
+            System.out.println("Greška prilikom učitavanja igre: " + iznimka.getMessage());
             return null;
         }
     }
@@ -40,7 +40,7 @@ public class SpremanjeIgre {
     public void obrisiSpremljenuIgru() {
         File datoteka = new File(PUTANJA_DATOTEKE);
         if (datoteka.exists() && !datoteka.delete()) {
-            System.out.println("Greska prilikom brisanja stare spremljene igre.");
+            System.out.println("Greška prilikom brisanja stare spremljene igre.");
         }
     }
 }

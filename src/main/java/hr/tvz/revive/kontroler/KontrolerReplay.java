@@ -47,7 +47,7 @@ public class KontrolerReplay {
     private void azurirajPrikaz() {
         if (svilPotezi == null || svilPotezi.isEmpty()) {
             labelaBrojKoraka.setText("Korak 0 / 0");
-            labelaTekstPoteza.setText("Nema jos zapisanih poteza.");
+            labelaTekstPoteza.setText("Nema još zapisanih poteza.");
             return;
         }
 

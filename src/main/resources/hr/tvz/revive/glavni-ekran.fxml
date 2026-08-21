@@ -28,7 +28,7 @@
 
     <left>
         <VBox spacing="10" prefWidth="270" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #dcdfe3; -fx-border-width: 0 2 0 0;">
-            <Label text="IGRAC 1 (zeleni)" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2e8b57;"/>
+            <Label text="IGRAČ 1 (zeleni)" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2e8b57;"/>
             <Label fx:id="labelaStanjeIgrac1" text="-" wrapText="true" style="-fx-font-size: 12px;"/>
             <Separator/>
             <Label text="Ruka karata" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
@@ -38,7 +38,7 @@
 
     <right>
         <VBox spacing="10" prefWidth="270" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #dcdfe3; -fx-border-width: 0 0 0 2;">
-            <Label text="IGRAC 2 (plavi)" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1e90ff;"/>
+            <Label text="IGRAČ 2 (plavi)" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1e90ff;"/>
             <Label fx:id="labelaStanjeIgrac2" text="-" wrapText="true" style="-fx-font-size: 12px;"/>
             <Separator/>
             <Label text="Ruka karata" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
@@ -51,7 +51,7 @@
 
             <VBox spacing="6" alignment="CENTER">
                 <Label text="PERMAFROST PLOČA" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
-                <Label text="Zeleno = Igrac 1, Plavo = Igrac 2, Sivo = slobodno" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
+                <Label text="Zeleno = Igrač 1, Plavo = Igrač 2, Sivo = slobodno" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
                 <StackPane>
                     <GridPane fx:id="mrezaPermafrosta" hgap="10" vgap="10" alignment="CENTER"/>
                     <Pane fx:id="slojPoruka" mouseTransparent="true" pickOnBounds="false"/>
@@ -95,7 +95,7 @@
     <bottom>
         <HBox spacing="10" alignment="CENTER" style="-fx-background-color: white; -fx-padding: 12; -fx-border-color: #dcdfe3; -fx-border-width: 2 0 0 0;">
             <Button fx:id="gumbSpremiIgru" text="Spremi igru" onAction="#spremiIgru" prefWidth="150" prefHeight="32"/>
-            <Button fx:id="gumbUcitajIgru" text="Ucitaj igru" onAction="#ucitajIgru" prefWidth="150" prefHeight="32"/>
+            <Button fx:id="gumbUcitajIgru" text="Učitaj igru" onAction="#ucitajIgru" prefWidth="150" prefHeight="32"/>
             <Button fx:id="gumbIgrajPonovno" text="Igraj ponovno" onAction="#igrajPonovno" prefWidth="150" prefHeight="32"/>
         </HBox>
     </bottom>

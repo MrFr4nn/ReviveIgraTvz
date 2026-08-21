@@ -80,7 +80,7 @@ public class ReviveEngine {
 
         if (!igracNaPotezu.getRukaKarata().contains(odabranaKarta)) {
             rezultatPoteza.setUspjesno(false);
-            rezultatPoteza.setPoruka("Igrac nema tu kartu u ruci.");
+            rezultatPoteza.setPoruka("Igrač nema tu kartu u ruci.");
             return rezultatPoteza;
         }
 
@@ -121,7 +121,7 @@ public class ReviveEngine {
         Radnik radnik = igracNaPotezu.pronadjiNepostavljenogRadnika(tipRadnika);
         if (radnik == null) {
             rezultatPoteza.setUspjesno(false);
-            rezultatPoteza.setPoruka("Vec si postavio tog radnika.");
+            rezultatPoteza.setPoruka("Već si postavio tog radnika.");
             return rezultatPoteza;
         }
 
@@ -143,7 +143,7 @@ public class ReviveEngine {
 
         rezultatPoteza.setUspjesno(true);
         rezultatPoteza.setPostavljenoPolje(polje);
-        rezultatPoteza.setPoruka(tipRadnika + " je postavljen i pocinje raditi od sljedece runde.");
+        rezultatPoteza.setPoruka(tipRadnika + " je postavljen i počinje raditi od sljedeće runde.");
         return rezultatPoteza;
     }
 

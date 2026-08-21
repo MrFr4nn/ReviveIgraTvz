@@ -7,12 +7,14 @@ import hr.tvz.revive.model.PermafrostPloca;
 import hr.tvz.revive.model.PoljePermafrosta;
 import hr.tvz.revive.model.Radnik;
 import hr.tvz.revive.model.TipRadnika;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +83,7 @@ public class AzuriranjeSucelja {
         int trenutnaRunda = Math.min(reviveEngine.getTrenutnaRunda(), ReviveEngine.BROJ_RUNDI);
         boolean zavrsnaRunda = trenutnaRunda == ReviveEngine.BROJ_RUNDI;
         labelaRunda.setText("Runda " + trenutnaRunda + "/" + ReviveEngine.BROJ_RUNDI
-                + (zavrsnaRunda ? " - Zavrsna runda" : ""));
+                + (zavrsnaRunda ? " - Završna runda" : ""));
 
         azurirajListuKarata(prviIgrac, listaKarataIgrac1, prviIgracNaPotezu);
         azurirajListuKarata(drugiIgrac, listaKarataIgrac2, !prviIgracNaPotezu);
@@ -93,7 +95,7 @@ public class AzuriranjeSucelja {
     public void azurirajGumbeRadnika(Igrac igracNaPotezu, Button gumbExplorer, Button gumbBuilder,
                                      Button gumbScholar, Button gumbScientist) {
         azurirajJedanGumb(gumbExplorer, "EXPLORER", "1 kristal", igracNaPotezu, TipRadnika.EXPLORER);
-        azurirajJedanGumb(gumbBuilder, "BUILDER", "2 zupcanika", igracNaPotezu, TipRadnika.BUILDER);
+        azurirajJedanGumb(gumbBuilder, "BUILDER", "2 zupčanika", igracNaPotezu, TipRadnika.BUILDER);
         azurirajJedanGumb(gumbScholar, "SCHOLAR", "2 hrane", igracNaPotezu, TipRadnika.SCHOLAR);
         azurirajJedanGumb(gumbScientist, "SCIENTIST", "1 kristal", igracNaPotezu, TipRadnika.SCIENTIST);
     }
@@ -115,9 +117,9 @@ public class AzuriranjeSucelja {
 
     private String formatirajStanjeIgraca(Igrac igrac) {
         return "Hrana: " + igrac.getHrana()
-                + "   Zupcanici: " + igrac.getZupcanici()
+                + "   Zupčanici: " + igrac.getZupcanici()
                 + "   Kristali: " + igrac.getKristali()
-                + "\nMasine: " + igrac.getIzgradjeneMasine().size()
+                + "\nMašine: " + igrac.getIzgradjeneMasine().size()
                 + "   Bodovi: " + igrac.izracunajUkupneBodoveNaKraju();
     }
 }
