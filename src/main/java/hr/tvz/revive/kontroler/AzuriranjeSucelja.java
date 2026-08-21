@@ -94,18 +94,18 @@ public class AzuriranjeSucelja {
 
     public void azurirajGumbeRadnika(Igrac igracNaPotezu, Button gumbExplorer, Button gumbBuilder,
                                      Button gumbScholar, Button gumbScientist) {
-        azurirajJedanGumb(gumbExplorer, "EXPLORER", "1 kristal", igracNaPotezu, TipRadnika.EXPLORER);
-        azurirajJedanGumb(gumbBuilder, "BUILDER", "2 zupčanika", igracNaPotezu, TipRadnika.BUILDER);
-        azurirajJedanGumb(gumbScholar, "SCHOLAR", "2 hrane", igracNaPotezu, TipRadnika.SCHOLAR);
-        azurirajJedanGumb(gumbScientist, "SCIENTIST", "1 kristal", igracNaPotezu, TipRadnika.SCIENTIST);
+        azurirajJedanGumb(gumbExplorer, igracNaPotezu, TipRadnika.EXPLORER);
+        azurirajJedanGumb(gumbBuilder, igracNaPotezu, TipRadnika.BUILDER);
+        azurirajJedanGumb(gumbScholar, igracNaPotezu, TipRadnika.SCHOLAR);
+        azurirajJedanGumb(gumbScientist, igracNaPotezu, TipRadnika.SCIENTIST);
     }
 
-    private void azurirajJedanGumb(Button gumb, String naziv, String cijena, Igrac igrac, TipRadnika tip) {
-        Radnik radnik = igrac.pronadjiNepostavljenogRadnika(tip);
-        boolean dostupan = radnik != null;
-        gumb.setText(naziv + " (" + cijena + ") " + (dostupan ? "1/1" : "0/1"));
-        gumb.setDisable(!dostupan);
-    }
+        private void azurirajJedanGumb(Button gumb, Igrac igrac, TipRadnika tip) {
+            Radnik radnik = igrac.pronadjiNepostavljenogRadnika(tip);
+            boolean dostupan = radnik != null;
+            gumb.setText(tip.name() + " (" + tip.getUvjetAktivacije() + ") " + (dostupan ? "1/1" : "0/1"));
+            gumb.setDisable(!dostupan);
+        }
 
     private void azurirajListuKarata(Igrac igrac, ListView<String> listaKarata, boolean prikaziPuniNaziv) {
         List<String> nazivi = new ArrayList<>();

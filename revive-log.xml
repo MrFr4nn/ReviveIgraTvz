@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<dnevnikIgre/>
+<dnevnikIgre>
+    <potez igrac="Igrač 1" karta="postavljanje radnika" radnik="BUILDER" runda="1"/>
+    <potez igrac="Igrač 2" karta="postavljanje radnika" radnik="SCIENTIST" runda="1"/>
+    <potez igrac="Igrač 1" karta="+1 Mašina" radnik="NAGRADA" runda="1"/>
+    <potez igrac="Igrač 2" karta="+2 bodova" radnik="NAGRADA" runda="1"/>
+    <potez igrac="Igrač 1" karta="postavljanje radnika" radnik="EXPLORER" runda="2"/>
+    <potez igrac="Igrač 2" karta="Veliki sanduk zupčanika" radnik="KARTA" runda="2"/>
+    <potez igrac="Igrač 1" karta="Nova karta!" radnik="NAGRADA" runda="2"/>
+    <potez igrac="Igrač 1" karta="+1 Mašina" radnik="NAGRADA" runda="2"/>
+    <potez igrac="Igrač 2" karta="+2 bodova" radnik="NAGRADA" runda="2"/>
+</dnevnikIgre>

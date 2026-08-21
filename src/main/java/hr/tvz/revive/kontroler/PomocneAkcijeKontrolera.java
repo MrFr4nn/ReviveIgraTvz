@@ -11,6 +11,7 @@ import hr.tvz.revive.model.PoljePermafrosta;
 import hr.tvz.revive.model.StanjeIgre;
 import hr.tvz.revive.reflection.KatalogRadnikaGenerator;
 import hr.tvz.revive.serijalizacija.SpremanjeIgre;
+import hr.tvz.revive.xml.CitacPoteza;
 import hr.tvz.revive.xml.PodatakOPotezu;
 import hr.tvz.revive.xml.ReplaySustav;
 import javafx.fxml.FXMLLoader;
@@ -131,7 +132,13 @@ public class PomocneAkcijeKontrolera {
             tekst.append(igrac.getImeIgraca()).append(": ")
                     .append(igrac.izracunajUkupneBodoveNaKraju()).append(" bodova\n");
         }
+        tekst.append("\nUkupno zabilježenih poteza: ").append(prebrojPoteze());
         return tekst.toString();
+    }
+
+    private int prebrojPoteze() {
+        CitacPoteza citacPoteza = new CitacPoteza();
+        return citacPoteza.procitajPoteze(PUTANJA_XML_DNEVNIKA).size();
     }
 
     public void pokreniAnimacijuPostavljanja(RezultatPoteza rezultatPoteza, Rectangle[][] pravokutnici) {

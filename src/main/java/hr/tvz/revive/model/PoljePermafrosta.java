@@ -10,14 +10,12 @@ public class PoljePermafrosta implements Serializable {
     private int stupac;
     private boolean zauzeto;
     private int indeksVlasnika;
-    private TipRadnika tipRadnikaNaPolju;
 
     public PoljePermafrosta(int redak, int stupac) {
         this.redak = redak;
         this.stupac = stupac;
         this.zauzeto = false;
         this.indeksVlasnika = -1;
-        this.tipRadnikaNaPolju = null;
     }
 
     public int getRedak() {
@@ -36,13 +34,8 @@ public class PoljePermafrosta implements Serializable {
         return indeksVlasnika;
     }
 
-    public TipRadnika getTipRadnikaNaPolju() {
-        return tipRadnikaNaPolju;
-    }
-
-    public void zauzmi(int indeksVlasnika, TipRadnika tipRadnika) {
+    public void zauzmi(int indeksVlasnika) {
         this.zauzeto = true;
         this.indeksVlasnika = indeksVlasnika;
-        this.tipRadnikaNaPolju = tipRadnika;
     }
 }

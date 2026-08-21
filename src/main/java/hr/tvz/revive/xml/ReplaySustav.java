@@ -35,7 +35,7 @@ public class ReplaySustav {
             }
 
         } catch (ParserConfigurationException | SAXException | IOException iznimka) {
-            System.out.println("Greska prilikom ucitavanja replaya: " + iznimka.getMessage());
+            System.out.println("Greška prilikom učitavanja replaya: " + iznimka.getMessage());
         }
 
         return potPoRundama;
@@ -48,20 +48,6 @@ public class ReplaySustav {
         String tipRadnika = elementPoteza.getAttribute("radnik");
 
         return new PodatakOPotezu(brojRunde, imeIgraca, nazivKarte, tipRadnika);
-    }
-
-    public String generirajTekstualniReplay(String putanjaDatoteke) {
-        Map<Integer, List<PodatakOPotezu>> potPoRundama = ucitajIGrupirajPoRundama(putanjaDatoteke);
-        StringBuilder tekstReplaya = new StringBuilder();
-
-        for (Map.Entry<Integer, List<PodatakOPotezu>> unosRunde : potPoRundama.entrySet()) {
-            tekstReplaya.append("--- Runda ").append(unosRunde.getKey()).append(" ---\n");
-            for (PodatakOPotezu podatak : unosRunde.getValue()) {
-                tekstReplaya.append(podatak.toString()).append("\n");
-            }
-        }
-
-        return tekstReplaya.toString();
     }
 
     public List<PodatakOPotezu> ucitajSvePotezeRedom(String putanjaDatoteke) {

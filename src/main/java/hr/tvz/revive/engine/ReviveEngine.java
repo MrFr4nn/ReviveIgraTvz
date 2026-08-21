@@ -139,7 +139,7 @@ public class ReviveEngine {
         }
 
         radnik.postaviNaPolje(redak, stupac);
-        polje.zauzmi(indeksIgracaNaPotezu, tipRadnika);
+        polje.zauzmi(indeksIgracaNaPotezu);
 
         rezultatPoteza.setUspjesno(true);
         rezultatPoteza.setPostavljenoPolje(polje);
